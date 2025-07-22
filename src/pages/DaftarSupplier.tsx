@@ -1,52 +1,65 @@
-import type { FC } from "react";
-import { getTitle } from "../constants/GetTitle";
+import { useEffect, type FC } from "react";
+import { FiPlusCircle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
-import { Plus } from "lucide-react";
+import { getTitle } from "../constants/GetTitle";
+import { useGetSupplierQuery } from "../services/apiSupplier";
+import Loading from "../components/Loading";
+import type { getSupplierResponse } from "../interfaces/supplier";
 
 type Supplier = {
     kode: string;
-    mataUang: string;
     nama: string;
     alamat: string;
-};
+}
+
 const DaftarSupplier: FC = () => {
     const title = getTitle();
+    const navigate = useNavigate();
+    const {data, isLoading} = useGetSupplierQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
 
-    const data: Supplier[] = [
-        { kode: "SP0001", mataUang: "IDR", nama: "INDO GROSIR", alamat: "Jl. Lkr. Selatan" },
-        { kode: "SP0002", mataUang: "IDR", nama: "BELLA MOTOR", alamat: "" },
-        { kode: "SP0003", mataUang: "IDR", nama: "BP APEN BERAS", alamat: "" },
-    ];
+    const dataSupplier = data?.map(item => ({ 
+        kode: item.kode, nama: item.nama, alamat: item.alamat 
+    }));
 
     const columns: Column<Supplier>[] = [
-        { key: "kode", label: "Kode", sortable: true },
-        { key: "mataUang", label: "Mata Uang", sortable: true },
-        { key: "nama", label: "Nama", sortable: true },
-        { key: "alamat", label: "Alamat", sortable: true },
+        { key: "kode", label: "Kode", align: "center", sortable: true },
+        { key: "nama", label: "Nama", align: "left", sortable: true },
+        { key: "alamat", label: "Alamat", align: "left", sortable: true },
     ];
 
     return (
         <div>
+            {isLoading && <Loading/>}
             <div className="flex justify-between items-center">
                 <div></div>
                 <div>
                     <button     
-                        className="flex items-center gap-2 btn bg-blue-500 rounded-lg text-xs text-white hover:bg-blue-600">
-                            <Plus size={18}/>
+                        className="flex items-center gap-2 btn bg-blue-500 rounded-lg text-xs text-white hover:bg-blue-600"
+                        onClick={() => navigate('/tambah-supplier')}
+                    >
+                            <FiPlusCircle size={20}/>
                             Tambah Supplier
                     </button>
                 </div>
             </div>
             <div className="mt-3">
-                <DataTable<Supplier> 
-                    data={data} 
-                    columns={columns} 
-                    defaultSort={{ 
-                        key: "nama", 
-                        asc: true 
-                    }} 
-                    fileExportName={title}
-                />
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <DataTable<Supplier> 
+                        data={dataSupplier ?? []} 
+                        columns={columns} 
+                        defaultSort={{ 
+                            key: "kode", 
+                            asc: true 
+                        }} 
+                        fileExportName={title}
+                        exportToExcelBtn={true}
+                        exportToPdfBtn={true}
+                        searchFilter={true}
+                    />
+                </div>
             </div>
         </div>
     )

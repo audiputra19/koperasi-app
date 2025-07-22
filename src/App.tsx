@@ -1,12 +1,15 @@
 import { BrowserRouter } from "react-router-dom"
 import Router from "./routers/Router"
+import { AlertProvider } from "./contexts/AlertContext"
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <AlertProvider>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </AlertProvider>
   )
 }
 

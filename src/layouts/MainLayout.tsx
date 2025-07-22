@@ -1,10 +1,14 @@
 import clsx from "clsx";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronRight, LogOut, Settings, User } from "lucide-react";
 import { useState, type FC } from "react";
 import { FaStore } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getTitle } from "../constants/GetTitle";
 import { sidebarMenu } from "../constants/SidebarMenu";
+import { useAppDispatch } from "../store";
+import { clearToken } from "../store/authSlice";
+import { usePostMeQuery } from "../services/apiAuth";
+import Alert from "../components/Alert";
 
 const MainLayout: FC = () => {
     const location = useLocation();
@@ -12,6 +16,9 @@ const MainLayout: FC = () => {
     const navigate = useNavigate();
     const [toggledMenus, setToggledMenus] = useState<Record<string, boolean>>({});
     const title = getTitle();
+    const dispatch = useAppDispatch();
+    const {data, isLoading} = usePostMeQuery();
+    const user = data?.user;
 
     const matchedMenu = sidebarMenu.find((menu) => {
         if (menu.submenus) {
@@ -58,9 +65,8 @@ const MainLayout: FC = () => {
         const Icon = menu.icon;
 
         return (
-            <>
+            <div key={index}>
                 <div 
-                    key={index}
                     className={clsx("px-5 py-3 rounded-md cursor-pointer group", 
                         "hover:bg-blue-50", {
                             "bg-blue-50": isActive,
@@ -73,7 +79,7 @@ const MainLayout: FC = () => {
                         <div className="flex items-center gap-3">
                             <Icon 
                                 className={clsx("group-hover:text-blue-600",
-                                    isActive ? "text-blue-600" : "text-slate-800",
+                                    isActive ? "text-blue-600" : "text-slate-600",
                                 )} 
                                 size={22}
                             />
@@ -111,7 +117,7 @@ const MainLayout: FC = () => {
                         ))}
                     </div>
                 )}
-            </>
+            </div>
         )
     });
 
@@ -119,6 +125,7 @@ const MainLayout: FC = () => {
         <>
             {/* Desktop */}
             <div className="hidden sm:block">
+                <Alert />
                 <div className="w-64 border-r-2 border-gray-100 min-h-screen fixed">
                     <div className="p-5">
                         <div className="flex items-center text-white gap-3">
@@ -133,7 +140,7 @@ const MainLayout: FC = () => {
                     </div>
                 </div>
                 <div className="ml-64 bg-gray-50 min-h-screen">
-                    <div className="flex justify-between items-center p-5 h-17 bg-white border-b-2 border-gray-100 sticky top-0">
+                    <div className="flex justify-between items-center p-5 h-17 bg-white border-b-2 border-gray-100 sticky top-0 z-10">
                         <div className="flex items-center gap-3">
                             {!matchedMenu && (
                                 <ArrowLeft 
@@ -151,12 +158,30 @@ const MainLayout: FC = () => {
                                 className="w-8 h-8 object-cover rounded-full" 
                             />
                             <div>
-                                <p className="text-sm font-bold text-slate-800">Username</p>
-                                <p className="text-xs font-semibold text-gray-400">Admin</p>
+                                <p className="text-sm font-bold text-slate-800">{user?.nama}</p>
+                            </div>
+                            <div className="dropdown dropdown-bottom dropdown-end">
+                                <div tabIndex={0} className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
+                                    <ChevronDown size={20} />
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content gap-2 menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl border border-gray-200 mt-5">
+                                    <li>
+                                        <a><User size={20}/>Profile</a>
+                                    </li>
+                                    <li>
+                                        <a><Settings size={20}/>Settings</a>
+                                    </li>
+                                    <li 
+                                        className="border-t border-gray-200 pt-2"
+                                        onClick={() => dispatch(clearToken())}
+                                    >
+                                        <a><LogOut size={20}/>Logout</a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div className="p-5">
+                    <div className="p-4">
                         <Outlet />
                     </div>
                 </div>

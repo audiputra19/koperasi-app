@@ -1,16 +1,21 @@
-import type { FC } from "react";
-import { useRoutes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import type { FC } from "react";
+import { useLocation, useRoutes } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
-import Dashboard from "../pages/Dashboard";
+import DaftarItem from "../pages/DaftarItem";
+import DaftarKasir from "../pages/DaftarKasir";
 import DaftarPelanggan from "../pages/DaftarPelanggan";
 import DaftarSupplier from "../pages/DaftarSupplier";
-import DaftarItem from "../pages/DaftarItem";
+import Dashboard from "../pages/Dashboard";
+import LoginPage from "../pages/LoginPage";
 import Pembelian from "../pages/Pembelian";
 import Penjualan from "../pages/Penjualan";
-import DaftarKasir from "../pages/DaftarKasir";
+import TambahItem from "../pages/TambahItem";
+import TambahKasir from "../pages/TambahKasir";
 import TambahPelanggan from "../pages/TambahPelanggan";
+import TambahSupplier from "../pages/TambahSupplier";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => (
     <motion.div
@@ -29,7 +34,7 @@ const Router: FC = () => {
     const routes = useRoutes([
         {
             path: '/',
-            element: <MainLayout />,
+            element: <ProtectedRoute><MainLayout /></ProtectedRoute>,
             children: [
                 {
                     index: true,
@@ -60,10 +65,26 @@ const Router: FC = () => {
                     element: <PageTransition><DaftarKasir /></PageTransition>,
                 },
                 {
-                    path: 'tambah-pelanggan',
+                    path: 'edit-pelanggan/:id',
                     element: <PageTransition><TambahPelanggan /></PageTransition>,
+                },
+                {
+                    path: 'tambah-supplier',
+                    element: <PageTransition><TambahSupplier /></PageTransition>,
+                },
+                {
+                    path: 'tambah-item',
+                    element: <PageTransition><TambahItem /></PageTransition>,
+                },
+                {
+                    path: 'tambah-kasir',
+                    element: <PageTransition><TambahKasir /></PageTransition>,
                 }
             ]
+        },
+        {
+            path: '/login',
+            element: <LoginPage />
         }
     ]);
 

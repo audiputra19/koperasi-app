@@ -1,7 +1,8 @@
+import clsx from "clsx";
 import { Search } from "lucide-react";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { useMemo, useState, type JSX } from "react";
+import React, { useMemo, useState, type JSX } from "react";
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import { RiFileExcel2Fill, RiFilePdf2Fill } from "react-icons/ri";
 import * as XLSX from "xlsx";
@@ -10,6 +11,8 @@ pdfMake.vfs = pdfFonts.vfs;
 export type Column<T extends Record<string, any>> = {
   key: keyof T;
   label: string;
+  align: string;
+  width?: number;
   sortable?: boolean;
 };
 
@@ -23,6 +26,9 @@ type Props<T extends Record<string, any>> = {
   };
   fileExportName?: string;
   footerSummary?: (data: T[]) => JSX.Element;
+  exportToExcelBtn?: boolean;
+  exportToPdfBtn?: boolean;
+  searchFilter?: boolean;
 };
 
 export function DataTable<T extends Record<string, any>>({
@@ -31,7 +37,10 @@ export function DataTable<T extends Record<string, any>>({
   pageSize = 10,
   defaultSort,
   fileExportName,
-  footerSummary
+  footerSummary,
+  exportToExcelBtn,
+  exportToPdfBtn,
+  searchFilter
 }: Props<T>) {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -130,9 +139,9 @@ export function DataTable<T extends Record<string, any>>({
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm">
+        <>
             <div className="flex justify-between items-center mb-4">
-                <div className="relative">
+                {searchFilter && <div className="relative">
                     <Search 
                         className="absolute top-[10px] left-3 text-gray-400" 
                         size={18} 
@@ -147,22 +156,22 @@ export function DataTable<T extends Record<string, any>>({
                             setPage(1);
                         }}
                     />
-                </div>
+                </div>}
                 <div className="flex gap-2">
-                    <button className="btn btn-sm" onClick={exportToPDF}>
+                    {exportToPdfBtn && <button className="btn btn-sm" onClick={exportToPDF}>
                         <RiFilePdf2Fill className="w-4 h-4 text-red-600"/>
                         Export Pdf
-                    </button>
-                    <button className="btn btn-sm" onClick={exportToExcel}>
+                    </button>}
+                    {exportToExcelBtn && <button className="btn btn-sm" onClick={exportToExcel}>
                         <RiFileExcel2Fill className="w-4 h-4 text-green-600"/>
                         Export Excel
-                    </button>
+                    </button>}
                 </div>
             </div>
 
-            <div className="overflow-x-auto max-h-[320px]">
+            <div className="overflow-x-auto max-h-[380px]">
                 <table className="table table-zebra w-full">
-                    <thead className="sticky top-0 bg-white z-10 text-gray-400 shadow-sm shadow-gray-100">
+                    <thead className="sticky top-0 bg-white text-gray-400 shadow-sm shadow-gray-100">
                         <tr>
                         <th>No</th>
                         {columns.map((col) => (
@@ -171,7 +180,7 @@ export function DataTable<T extends Record<string, any>>({
                                 className={col.sortable ? "cursor-pointer select-none whitespace-nowrap" : ""}
                                 onClick={() => col.sortable && handleSort(col.key)}
                                 >
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center justify-center gap-1" style={{ width: col.width }}>
                                     {col.label}
                                     {col.sortable &&
                                     (sortBy === col.key ? (
@@ -189,16 +198,28 @@ export function DataTable<T extends Record<string, any>>({
                         </tr>
                     </thead>
                     <tbody>
-                        {paginatedData.map((row, i) => (
-                        <tr key={i}>
-                            <th>{(page - 1) * pageSize + i + 1}</th>
-                            {columns.map((col) => (
-                            <td key={String(col.key)}>{String(row[col.key])}</td>
-                            ))}
-                        </tr>
-                        ))}
+                        {paginatedData.length === 0 ? (
+                            <tr>
+                                <td colSpan={columns.length + 1} className="text-center py-4 text-gray-500 bg-gray-50">
+                                    No data available in table
+                                </td>
+                            </tr>
+                        ) : (
+                            paginatedData.map((row, i) => (
+                            <tr key={i}>
+                                <th>{(page - 1) * pageSize + i + 1}</th>
+                                {columns.map((col) => (
+                                     <td key={String(col.key)} className={`text-${col.align}`}>
+                                        {React.isValidElement(row[col.key])
+                                        ? row[col.key]
+                                        : String(row[col.key])}
+                                    </td>
+                                ))}
+                            </tr>
+                            ))
+                        )}
                     </tbody>
-                    {footerSummary && (
+                    {paginatedData.length > 0 && footerSummary && (
                         <tfoot className="font-bold text-gray-400 sticky bottom-0 bg-white">
                         {footerSummary(sortedData)}
                         </tfoot>
@@ -230,6 +251,6 @@ export function DataTable<T extends Record<string, any>>({
                     </button>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

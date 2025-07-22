@@ -22,8 +22,12 @@ export const getTitle = () => {
             const matchedSub = matchedMenu.submenus?.find((sub) => path.includes(sub.path));
             setTitle(matchedSub?.name || matchedMenu.name);
         } else {
-            const slug = path.split("/").filter(Boolean).pop();
-            if(slug === 'tambah-pelanggan') return setTitle('Tambah Pelanggan');
+            const segments = path.split("/").filter(Boolean);
+            const slug = segments.length >= 2 ? segments.at(-2) : segments.at(-1);
+            if(slug === 'edit-pelanggan') return setTitle('Edit Pelanggan');
+            if(slug === 'tambah-supplier') return setTitle('Tambah Supplier');
+            if(slug === 'tambah-item') return setTitle('Tambah Item');
+            if(slug === 'tambah-kasir') return setTitle('Tambah Kasir');
         }
     }, [path]);
 
