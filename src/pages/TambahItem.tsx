@@ -24,7 +24,7 @@ const TambahItem:FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const fromPage = location.state?.from ?? 'daftar-item';
-    console.log(fromPage)
+    //console.log(fromPage)
 
     useEffect(() => {
         if(isSuccess && data) {

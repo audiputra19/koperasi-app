@@ -1,0 +1,40 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { GetPembelianDetailRequest, GetPembelianDetailResponse, GetPembelianResponse, InputPembelianRequest, InputPembelianResponse, UpdatePembelianRequest, UpdatePembelianResponse } from "../interfaces/pembelian";
+
+export const apiPembelian = createApi({
+    reducerPath: "apiPembelian",
+    baseQuery: fetchBaseQuery({
+        baseUrl: "http://localhost:3001"
+    }),
+    endpoints: build => ({
+        inputPembelian: build.mutation<InputPembelianResponse, InputPembelianRequest>({
+            query: body => ({
+                url: "/input-pembelian",
+                method: "POST",
+                body
+            })
+        }),
+        updatePembelian: build.mutation<UpdatePembelianResponse, UpdatePembelianRequest>({
+            query: body => ({
+                url: "/update-pembelian",
+                method: "POST",
+                body
+            })
+        }),
+        getPembelian: build.query<GetPembelianResponse[], void>({
+            query: () => ({
+                url: "/get-pembelian",
+                method: "POST"
+            })
+        }),
+        getPembelianDetail: build.mutation<GetPembelianDetailResponse[], GetPembelianDetailRequest>({
+            query: body => ({
+                url: "/get-pembeliandetail",
+                method: "POST",
+                body
+            })
+        }), 
+    }),
+})
+
+export const { useInputPembelianMutation, useUpdatePembelianMutation, useGetPembelianQuery, useGetPembelianDetailMutation } = apiPembelian

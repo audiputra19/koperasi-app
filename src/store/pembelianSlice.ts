@@ -1,21 +1,19 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { LoginResponse } from "../interfaces/auth";
-import type { getItemResponse } from "../interfaces/items";
-import type { GetKasirDetailResponse } from "../interfaces/kasir";
+import type { GetPembelianDetailResponse } from "../interfaces/pembelian";
 
-interface KasirState {
-    transaction: GetKasirDetailResponse[];
+interface PembelianState {
+    transaction: GetPembelianDetailResponse[];
 }
 
-const initialState: KasirState = {
+const initialState: PembelianState = {
     transaction: []
 }
 
-const kasirSlice = createSlice({
-    name: "kasir",
+const pembelianSlice = createSlice({
+    name: "pembelian",
     initialState,
     reducers: {
-        addTransaction: (state, action: PayloadAction<GetKasirDetailResponse>) => {
+        addTransactionPembelian: (state, action: PayloadAction<GetPembelianDetailResponse>) => {
             const existingItem = state.transaction.find(item => item.barcode === action.payload.barcode);
             if (existingItem) {
                 existingItem.jumlah += Number(1);
@@ -23,20 +21,20 @@ const kasirSlice = createSlice({
                 state.transaction.push({ ...action.payload, jumlah: Number(1) });
             }
         },
-        updateTransaction: (state, action: PayloadAction<{ barcode: string, stok: number }>) => {
+        updateTransactionPembelian: (state, action: PayloadAction<{ barcode: string, stok: number }>) => {
             const item = state.transaction.find(item => item.barcode === action.payload.barcode);
             if (item) {
                 item.jumlah = action.payload.stok;
             }
         },
-        deleteTransaction: (state, action: PayloadAction<string>) => {
+        deleteTransactionPembelian: (state, action: PayloadAction<string>) => {
             state.transaction = state.transaction.filter(item => item.barcode !== action.payload);  
         },
-        clearTransaction: (state) => {
+        clearTransactionPembelian: (state) => {
             state.transaction = [];
         }
     }
 });
 
-export const { addTransaction, updateTransaction, deleteTransaction, clearTransaction } = kasirSlice.actions;
-export default kasirSlice.reducer;
+export const { addTransactionPembelian, updateTransactionPembelian, deleteTransactionPembelian, clearTransactionPembelian } = pembelianSlice.actions;
+export default pembelianSlice.reducer;

@@ -1,51 +1,51 @@
 import { useEffect, useState, type FC } from "react";
-import type { GetPelangganResponse } from "../interfaces/pelanggan";
-import { useSearchPelangganQuery } from "../services/apiPelanggan";
+import type { getSupplierResponse } from "../interfaces/supplier";
+import { useSearchSupplierQuery } from "../services/apiSupplier";
 import { LucideCircleX } from "lucide-react";
 import { useGetKasirQuery } from "../services/apiKasir";
 import { useParams } from "react-router-dom";
+import { useGetPembelianQuery } from "../services/apiPembelian";
 
 interface onSelectUserProps {
-    onSelectUser: (user: GetPelangganResponse) => void
+    onSelectUser: (user: getSupplierResponse) => void
 }
 
-const SearchPelanggan:FC<onSelectUserProps> = ({ onSelectUser }) => {
+const SearchSupplier:FC<onSelectUserProps> = ({ onSelectUser }) => {
 
     const [search, setSearch] = useState("");
-    const [selectedUser, setSelectedUser] = useState<GetPelangganResponse | null>(null);
+    const [selectedUser, setSelectedUser] = useState<getSupplierResponse | null>(null);
     const [hasAutoFilled, setHasAutoFilled] = useState(false);
-    const {data: listPelanggan = [] } = useSearchPelangganQuery(search, { 
+    const {data: listSupplier = [] } = useSearchSupplierQuery(search, { 
         skip: !search.trim(),
         refetchOnMountOrArgChange: true,
     });
-    const {data: kasirData = []} = useGetKasirQuery(undefined, {
+    const {data: pembelianData = []} = useGetPembelianQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
     const {id} = useParams();
     const idTransaksi = decodeURIComponent(id ?? '');
-    const namaPelanggan = kasirData.find(k => k.idTransaksi === idTransaksi);
+    const namaSupplier = pembelianData.find(p => p.idTransaksi === idTransaksi);
     //console.log(search)
 
     useEffect(() => {
         if (
             !hasAutoFilled &&
-            namaPelanggan?.kdPelanggan &&
-            namaPelanggan?.namaPelanggan
+            namaSupplier?.kdSupplier &&
+            namaSupplier?.namaSupplier
         ) {
-            const pelangganFromKasir: GetPelangganResponse = {
-                kode: namaPelanggan.kdPelanggan,
-                nama: namaPelanggan.namaPelanggan,
-                idKategori: 0,
-                limitBelanja: 0,
+            const SupplierFromPembelian: getSupplierResponse = {
+                kode: namaSupplier.kdSupplier,
+                nama: namaSupplier.namaSupplier,
+                alamat: "",
             };
-            setSearch(pelangganFromKasir.nama);
-            setSelectedUser(pelangganFromKasir);
-            onSelectUser(pelangganFromKasir);
-            setHasAutoFilled(true); // ✅ jangan auto-fill lagi setelah ini
+            setSearch(SupplierFromPembelian.nama);
+            setSelectedUser(SupplierFromPembelian);
+            onSelectUser(SupplierFromPembelian);
+            setHasAutoFilled(true);
         }
-    }, [hasAutoFilled, namaPelanggan, onSelectUser]);
+    }, [hasAutoFilled, namaSupplier, onSelectUser]);
 
-    const handleSelect = (user: GetPelangganResponse) => {
+    const handleSelect = (user: getSupplierResponse) => {
         onSelectUser(user);
         setSelectedUser(user);
         setSearch(user.nama);
@@ -61,7 +61,7 @@ const SearchPelanggan:FC<onSelectUserProps> = ({ onSelectUser }) => {
             <div className="relative">
                 <input
                     type="text"
-                    placeholder="Cari Pelanggan"
+                    placeholder="Cari Supplier"
                     className="w-full border px-3 py-2 pr-10 border-gray-300 rounded-lg text-sm focus:outline-none"
                     value={search}
                     onChange={handleInputChange}
@@ -73,9 +73,9 @@ const SearchPelanggan:FC<onSelectUserProps> = ({ onSelectUser }) => {
                     />
                 </button>
             </div>
-            {search.trim() !== "" && !selectedUser && listPelanggan.length > 0 && (
+            {search.trim() !== "" && !selectedUser && listSupplier.length > 0 && (
                 <ul className="mt-2 max-h-[300px] overflow-y-auto border border-gray-200 rounded-lg bg-white absolute z-10 shadow-lg">
-                {listPelanggan.map((user) => (
+                {listSupplier.map((user) => (
                     <li
                         key={user.kode}
                         onClick={() => handleSelect(user)}
@@ -90,4 +90,4 @@ const SearchPelanggan:FC<onSelectUserProps> = ({ onSelectUser }) => {
     )
 }
 
-export default SearchPelanggan;
+export default SearchSupplier;

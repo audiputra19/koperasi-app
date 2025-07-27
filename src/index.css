@@ -1,6 +1,21 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  html, body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 body {
   font-family: 'Inter', sans-serif;
 }

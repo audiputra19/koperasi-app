@@ -2,19 +2,18 @@ import clsx from "clsx";
 import { useEffect, useState, type FC, type JSX } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { useNavigate, useParams } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
 import DatePickerInput from "../components/DatePicker";
 import SearchItem from "../components/SearchItem";
-import type { getItemResponse } from "../interfaces/items";
 import SearchPelanggan from "../components/SearchPelanggan";
+import { useAlert } from "../contexts/AlertContext";
+import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import type { GetPelangganResponse } from "../interfaces/pelanggan";
+import { usePostMeQuery } from "../services/apiAuth";
+import { useGetKasirDetailMutation, useGetKasirQuery, useInputKasirMutation, useUpdateKasirMutation } from "../services/apiKasir";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransaction, clearTransaction, deleteTransaction, updateTransaction } from "../store/kasirSlice";
-import { useInputKasirMutation } from "../services/apiKasir";
-import { usePostMeQuery } from "../services/apiAuth";
-import { useAlert } from "../contexts/AlertContext";
-import { useNavigate } from "react-router-dom";
-import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import moment from "moment";
 
 type Kasir = {
@@ -27,19 +26,32 @@ type Kasir = {
     total: string;
     action: JSX.Element;
 };
-const TambahKasir:  FC = () => {
+const EditKasir:  FC = () => {
     const [step, setStep] = useState(1);
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const dateKasir = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
     const [listPelanggan, setListPelanggan] = useState<GetPelangganResponse>();
     const dispatch = useAppDispatch();
-    const listBarang = useAppSelector(state => state.kasir.transaction);
-    const [inputKasir, {data: kasir, isLoading, error, isSuccess}] = useInputKasirMutation();
+    const [updateKasir, {data: kasir, error, isSuccess}] = useUpdateKasirMutation();
+    const [getKasirDetail, {data: listBarang, isLoading}] = useGetKasirDetailMutation();
+    const transaction = useAppSelector(state => state.kasir.transaction);
     const [metode, setMetode] = useState(0);
     const {data} = usePostMeQuery();
     const user = data?.user;
     const {showAlert} = useAlert();
     const navigate = useNavigate();
+    const {id} = useParams();
+    const idTransaksi = decodeURIComponent(id ?? '');
+    const {data: kasirData = []} = useGetKasirQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+    const takeKasir = kasirData.find(k => k.idTransaksi === idTransaksi);
+
+    useEffect(() => {
+        if (idTransaksi) {
+            getKasirDetail({ idTransaksi });
+        }
+    }, [idTransaksi, getKasirDetail]);
 
     useEffect(() => {
         if(kasir && isSuccess) {
@@ -61,8 +73,15 @@ const TambahKasir:  FC = () => {
         setListPelanggan(pelanggan);
     }
 
+    const combinedItems = [
+        ...(listBarang ?? []).map(item => ({ ...item, source: 'database' })),
+        ...transaction
+            .filter(reduxItem => !(listBarang ?? []).some(dbItem => dbItem.barcode === reduxItem.barcode))
+            .map(item => ({ ...item, source: 'redux' }))
+    ];
+
     let total = 0;
-    const dataKasir = listBarang.map(item => {
+    const dataKasir = combinedItems?.map(item => {
         total += item.jumlah * item.harga;
         const totalItem = item.jumlah * item.harga;
 
@@ -77,7 +96,7 @@ const TambahKasir:  FC = () => {
                         value={item.jumlah}
                         onChange={(e) => {
                             const newStok = Number( e.target.value);
-                            dispatch(updateTransaction({barcode: item.barcode, stok: newStok}));
+                            dispatch(updateTransaction({barcode: item.kodeItem, stok: newStok}));
                         }}
                         className="w-16 py-1 text-center border border-gray-300 rounded-md focus:outline-none"
                     />    
@@ -114,7 +133,7 @@ const TambahKasir:  FC = () => {
             return;
         }
 
-        const dataKasir = listBarang.map(item => ({
+        const dataKasir = transaction?.map(item => ({
             kodeItem: item.kodeItem,
             namaItem: item.namaItem,
             jenis: item.jenis,
@@ -129,13 +148,14 @@ const TambahKasir:  FC = () => {
         };
 
         try {
-            await inputKasir({
+            await updateKasir({
                 dataKasir,
                 dataPelanggan,
                 total,
                 metode,
                 startDate: dateKasir,
                 userBuat: user?.nama || "",
+                idTransaksi
             })
         } catch (error) {
             console.error('gagal:', error);
@@ -190,7 +210,7 @@ const TambahKasir:  FC = () => {
                         </div>
                         <div className="mt-5">
                             <DataTable<Kasir> 
-                                data={dataKasir} 
+                                data={dataKasir ?? []} 
                                 columns={columns}
                             />
                         </div>
@@ -237,7 +257,7 @@ const TambahKasir:  FC = () => {
                                             id="tunai" 
                                             value="1" 
                                             className="mr-1"
-                                            checked={metode === 1}
+                                            checked={takeKasir?.metode === 1}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="tunai" className="text-sm font-semibold text-gray-500">Tunai</label>
@@ -249,7 +269,7 @@ const TambahKasir:  FC = () => {
                                             id="kredit" 
                                             value="2" 
                                             className="mr-1"
-                                            checked={metode === 2}
+                                            checked={takeKasir?.metode === 2}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="kredit" className="text-sm font-semibold text-gray-500">Kredit</label>
@@ -261,7 +281,7 @@ const TambahKasir:  FC = () => {
                                             id="qris" 
                                             value="3" 
                                             className="mr-1"
-                                            checked={metode === 3}
+                                            checked={takeKasir?.metode === 3}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="qris" className="text-sm font-semibold text-gray-500">QRIS</label>
@@ -290,4 +310,4 @@ const TambahKasir:  FC = () => {
     )
 }
 
-export default TambahKasir;
+export default EditKasir;

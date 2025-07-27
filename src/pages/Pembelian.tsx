@@ -1,53 +1,63 @@
 import type { FC, JSX } from "react";
-import { TbEdit } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import { FiPlusCircle } from "react-icons/fi";
 import { DataTable, type Column } from "../components/DataTable";
 import { getTitle } from "../constants/GetTitle";
-import { FiPlusCircle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { useGetKasirQuery } from "../services/apiKasir";
+import moment from 'moment';
+import { TbEdit } from "react-icons/tb";
+import { useGetPembelianQuery } from "../services/apiPembelian";
 
 type Pembelian = {
-    noTransaksi: number;
+    noTransaksi: string;
     tanggal: string;
-    kdSupplier: string;
-    namaSupplier: string;
-    total: number;
+    kodeSupp: string;
+    nama: string;
+    total: string;
     userBuat: string;
     userUbah: string;
     action: JSX.Element;
 };
+
 const Pembelian: FC = () => {
     const title = getTitle();
     const navigate = useNavigate();
+    const {data} = useGetPembelianQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+        
+    const dataPembelian = data?.map(item => {
+        const date = moment(item.tanggal).format("YYYY-MM-DD HH:mm:ss");
+        const userUbah = item.userUbah === null ? "" : item.userUbah
 
-    const dataPembelian: Pembelian[] = Array.from({ length: 50 }, (_, index) => (
-        { 
-            noTransaksi: index + 1,
-            tanggal: "2023-01-01",
-            kdSupplier: "SP001",
-            namaSupplier: "Supplier A",
-            total: 100000,
-            userBuat: "admin",
-            userUbah: "admin",
+        return {
+            noTransaksi: item.idTransaksi,
+            tanggal: date,
+            kodeSupp: item.kdSupplier,
+            nama: item.namaSupplier,
+            total: item.total.toLocaleString("id-ID"),
+            userBuat: item.userBuat,
+            userUbah: userUbah,
             action: (
-                <button
+                <button 
                     className="cursor-pointer"
-                    onClick={() => navigate(`/edit-pembelian/${index + 1}`)}
+                    onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
                 >
-                    <TbEdit size={20}/>
+                    <TbEdit size={20} />
                 </button>
-            ),
+            )
         }
-    ));
+    })
 
     const columns: Column<Pembelian>[] = [
-        { key: "noTransaksi", label: "No Transaksi", align: "center", sortable: true },
-        { key: "tanggal", label: "Tanggal", align: "left", sortable: true },
-        { key: "kdSupplier", label: "Kode Supplier", align: "center", sortable: true },
-        { key: "namaSupplier", label: "Nama Supplier", align: "center", sortable: true },
-        { key: "total", label: "Total", align: "center", sortable: true },
+        { key: "noTransaksi", label: "No. Transaksi", align: "center", sortable: true },
+        { key: "tanggal", label: "Tanggal", align: "center", sortable: true },
+        { key: "kodeSupp", label: "Kd Supplier", align: "center", sortable: true },
+        { key: "nama", label: "Nama", align: "left", sortable: true },
+        { key: "total", label: "Total", align: "right", sortable: true },
         { key: "userBuat", label: "User Buat", align: "center", sortable: true },
         { key: "userUbah", label: "User Ubah", align: "center", sortable: true },
-        { key: "action", label: "Action", align: "center" },
+        { key: "action", label: "Edit", align: "center", sortable: true },
     ];
 
     return (
@@ -57,10 +67,10 @@ const Pembelian: FC = () => {
                 <div>
                     <button     
                         className="flex items-center gap-2 btn bg-blue-500 rounded-lg text-xs text-white hover:bg-blue-600"
-                        onClick={() => navigate('/tambah-supplier')}
+                        onClick={() => navigate('/tambah-pembelian')}
                     >
-                            <FiPlusCircle size={20}/>
-                            Tambah Pembelian
+                        <FiPlusCircle size={20}/>
+                        Tambah Pembelian
                     </button>
                 </div>
             </div>
@@ -68,7 +78,7 @@ const Pembelian: FC = () => {
                 <div className="bg-white p-4 rounded-lg shadow-sm">
                     <DataTable<Pembelian> 
                         data={dataPembelian ?? []} 
-                        columns={columns}
+                        columns={columns} 
                         fileExportName={title}
                         exportToExcelBtn={true}
                         exportToPdfBtn={true}

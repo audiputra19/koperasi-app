@@ -1,4 +1,4 @@
-interface DataKasir {
+interface DataPembelian {
     kodeItem: string;
     namaItem: string;
     jenis: string;
@@ -7,50 +7,50 @@ interface DataKasir {
     harga: number;
 }
 
-interface DataPelanggan {
-    kodePelanggan: number;
-    namaPelanggan: string;
+interface DataSupplier {
+    kodeSupplier: string;
+    namaSupplier: string;
 }
 
-export interface InputKasirRequest {
+export interface InputPembelianRequest {
     userBuat: string;
     total: number;
     metode: number;
     startDate: string;
-    dataKasir: DataKasir[];
-    dataPelanggan: DataPelanggan;
+    dataPembelian: DataPembelian[];
+    dataSupplier: DataSupplier;
 }
 
-export interface InputKasirResponse {
+export interface InputPembelianResponse {
     message: string;
 }
 
-export interface UpdateKasirRequest {
+export interface UpdatePembelianRequest {
     userBuat: string;
     total: number;
     metode: number;
     startDate: string;
-    dataKasir: DataKasir[];
-    dataPelanggan: DataPelanggan;
+    dataPembelian: DataPembelian[];
+    dataSupplier: DataSupplier;
     idTransaksi: string;
 }
 
-export interface UpdateKasirResponse {
+export interface UpdatePembelianResponse {
     message: string;
 }
 
-export interface GetKasirResponse {
+export interface GetPembelianResponse {
     idTransaksi: string;
     tanggal: string;
-    kdPelanggan: number;
-    namaPelanggan: string;
+    kdSupplier: string;
+    namaSupplier: string;
     total: number;
     userBuat: string;
     userUbah: string;
     metode: number;
 }
 
-export interface GetKasirDetailResponse {
+export interface GetPembelianDetailResponse {
     kodeItem: string;
     barcode: string;
     namaItem: string;
@@ -60,6 +60,6 @@ export interface GetKasirDetailResponse {
     harga: number;
 }
 
-export interface GetKasirDetailRequest {
+export interface GetPembelianDetailRequest {
     idTransaksi: string;
 }

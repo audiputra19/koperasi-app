@@ -1,35 +1,52 @@
-import type { FC } from "react";
+import type { FC, JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
 import { DataTable, type Column } from "../components/DataTable";
 import { getTitle } from "../constants/GetTitle";
 import { useNavigate } from "react-router-dom";
+import { useGetKasirQuery } from "../services/apiKasir";
+import moment from 'moment';
+import { TbEdit } from "react-icons/tb";
 
 type Kasir = {
     noTransaksi: string;
     tanggal: string;
     kodePel: number;
     nama: string;
-    total: number;
+    total: string;
     userBuat: string;
     userUbah: string;
-    ppn: string;
+    action: JSX.Element;
 };
+
 const DaftarKasir: FC = () => {
     const title = getTitle();
     const navigate = useNavigate();
+    const {data} = useGetKasirQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
         
-    const data: Kasir[] = Array.from({ length: 50 }, (_, index) => (
-        {
-            noTransaksi: "TRX001",
-            tanggal: "2025-07-12",
-            kodePel: 101,
-            nama: "Budi Santoso",
-            total: 250000,
-            userBuat: "admin",
-            userUbah: "admin",
-            ppn: "10%",
+    const dataKasir = data?.map(item => {
+        const date = moment(item.tanggal).format("YYYY-MM-DD HH:mm:ss");
+        const userUbah = item.userUbah === null ? "" : item.userUbah
+
+        return {
+            noTransaksi: item.idTransaksi,
+            tanggal: date,
+            kodePel: item.kdPelanggan,
+            nama: item.namaPelanggan,
+            total: item.total.toLocaleString("id-ID"),
+            userBuat: item.userBuat,
+            userUbah: userUbah,
+            action: (
+                <button 
+                    className="cursor-pointer"
+                    onClick={() => navigate(`/edit-kasir/${encodeURIComponent(item.idTransaksi)}`)}
+                >
+                    <TbEdit size={20} />
+                </button>
+            )
         }
-    ));
+    })
 
     const columns: Column<Kasir>[] = [
         { key: "noTransaksi", label: "No. Transaksi", align: "center", sortable: true },
@@ -37,9 +54,9 @@ const DaftarKasir: FC = () => {
         { key: "kodePel", label: "Kd Pelanggan", align: "center", sortable: true },
         { key: "nama", label: "Nama", align: "left", sortable: true },
         { key: "total", label: "Total", align: "right", sortable: true },
-        { key: "ppn", label: "PPN", align: "center", sortable: false },
         { key: "userBuat", label: "User Buat", align: "center", sortable: true },
         { key: "userUbah", label: "User Ubah", align: "center", sortable: true },
+        { key: "action", label: "Edit", align: "center", sortable: true },
     ];
 
     return (
@@ -59,12 +76,8 @@ const DaftarKasir: FC = () => {
             <div className="mt-3">
                 <div className="bg-white p-4 rounded-lg shadow-sm">
                     <DataTable<Kasir> 
-                        data={data} 
+                        data={dataKasir ?? []} 
                         columns={columns} 
-                        defaultSort={{ 
-                            key: "nama", 
-                            asc: true 
-                        }} 
                         fileExportName={title}
                         exportToExcelBtn={true}
                         exportToPdfBtn={true}

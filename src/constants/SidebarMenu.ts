@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd, LayoutDashboard, Package, Store } from "lucide-react";
+import { FileText, GalleryVerticalEnd, LayoutDashboard, Package, Store } from "lucide-react";
 
 export const sidebarMenu = [
     { 
@@ -28,5 +28,10 @@ export const sidebarMenu = [
         submenus: [
             { name: "Daftar Kasir", path: "daftar-kasir" },
         ]
+    },
+    { 
+        name: "Laporan", 
+        path: "laporan", 
+        icon: FileText
     },
 ];

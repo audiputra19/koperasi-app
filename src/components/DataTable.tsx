@@ -14,6 +14,7 @@ export type Column<T extends Record<string, any>> = {
   align: string;
   width?: number;
   sortable?: boolean;
+  render?: (row: T) => JSX.Element | string | number;
 };
 
 type Props<T extends Record<string, any>> = {
@@ -210,9 +211,11 @@ export function DataTable<T extends Record<string, any>>({
                                 <th>{(page - 1) * pageSize + i + 1}</th>
                                 {columns.map((col) => (
                                      <td key={String(col.key)} className={`text-${col.align}`}>
-                                        {React.isValidElement(row[col.key])
-                                        ? row[col.key]
-                                        : String(row[col.key])}
+                                        {col.render
+                                        ? col.render(row)
+                                        : React.isValidElement(row[col.key])
+                                            ? row[col.key]
+                                            : String(row[col.key])}
                                     </td>
                                 ))}
                             </tr>

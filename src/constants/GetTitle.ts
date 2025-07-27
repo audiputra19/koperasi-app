@@ -28,6 +28,8 @@ export const getTitle = () => {
             if(slug === 'tambah-supplier') return setTitle('Tambah Supplier');
             if(slug === 'tambah-item') return setTitle('Tambah Item');
             if(slug === 'tambah-kasir') return setTitle('Tambah Kasir');
+            if(slug === 'edit-kasir') return setTitle('Edit Kasir');
+            if(slug === 'tambah-pembelian') return setTitle('Tambah Pembelian');
         }
     }, [path]);
 

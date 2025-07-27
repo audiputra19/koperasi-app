@@ -9,6 +9,8 @@ import { useAppDispatch } from "../store";
 import { clearToken } from "../store/authSlice";
 import { usePostMeQuery } from "../services/apiAuth";
 import Alert from "../components/Alert";
+import { clearTransaction } from "../store/kasirSlice";
+import { clearTransactionPembelian } from "../store/pembelianSlice";
 
 const MainLayout: FC = () => {
     const location = useLocation();
@@ -19,6 +21,8 @@ const MainLayout: FC = () => {
     const dispatch = useAppDispatch();
     const {data, isLoading} = usePostMeQuery();
     const user = data?.user;
+    const isKasirPage = path === "/tambah-kasir" || /^\/edit-kasir\/.+/.test(path);
+    const isPembelianPage = path === "/tambah-pembelian" || /^\/edit-pembelian\/.+/.test(path);
 
     const matchedMenu = sidebarMenu.find((menu) => {
         if (menu.submenus) {
@@ -144,7 +148,11 @@ const MainLayout: FC = () => {
                         <div className="flex items-center gap-3">
                             {!matchedMenu && (
                                 <ArrowLeft 
-                                    onClick={() => navigate(-1)} 
+                                    onClick={() => {
+                                        navigate(-1);
+                                        if(isKasirPage) dispatch(clearTransaction());
+                                        if(isPembelianPage) dispatch(clearTransactionPembelian());
+                                    }} 
                                     className="text-slate-800 cursor-pointer border-2 border-gray-400 p-1 rounded-full hover:bg-gray-100"
                                     size={30}
                                 />

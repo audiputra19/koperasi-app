@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import authSlice from "./authSlice"
-import kasirSlice from "./kasirSlice"
+import authSlice from "./authSlice";
+import kasirSlice from "./kasirSlice";
+import pembelianSlice from "./pembelianSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import { useDispatch, type TypedUseSelectorHook } from "react-redux";
 import { useSelector } from "react-redux";
@@ -10,21 +11,24 @@ import { apiSupplier } from "../services/apiSupplier";
 import { apiPelanggan } from "../services/apiPelanggan";
 import { apiItems } from "../services/apiItems";
 import { apiKasir } from "../services/apiKasir";
+import { apiPembelian } from "../services/apiPembelian";
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth', 'kasir']
+    whitelist: ['auth', 'kasir', 'pembelian']
 }
 
 const rootReducer = combineReducers({
     auth: authSlice,
     kasir: kasirSlice,
+    pembelian: pembelianSlice,
     [apiAuth.reducerPath]: apiAuth.reducer,
     [apiSupplier.reducerPath]: apiSupplier.reducer,
     [apiPelanggan.reducerPath]: apiPelanggan.reducer,
     [apiItems.reducerPath]: apiItems.reducer,
-    [apiKasir.reducerPath]: apiKasir.reducer
+    [apiKasir.reducerPath]: apiKasir.reducer,
+    [apiPembelian.reducerPath]: apiPembelian.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -39,7 +43,8 @@ export const store = configureStore({
             apiSupplier.middleware,
             apiPelanggan.middleware,
             apiItems.middleware,
-            apiKasir.middleware
+            apiKasir.middleware,
+            apiPembelian.middleware,
         )
 });
 

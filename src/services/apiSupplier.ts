@@ -19,8 +19,11 @@ export const apiSupplier = createApi({
                 url: "/get-supplier",
                 method: "POST"
             })
+        }),
+        searchSupplier: build.query<getSupplierResponse[], string>({
+            query: (keyword) => `/search-supplier?q=${keyword}` 
         })
     })
 })
 
-export const { useInputSupplierMutation, useGetSupplierQuery } = apiSupplier;
+export const { useInputSupplierMutation, useGetSupplierQuery, useSearchSupplierQuery } = apiSupplier;

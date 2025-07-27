@@ -10,12 +10,17 @@ import DaftarSupplier from "../pages/DaftarSupplier";
 import Dashboard from "../pages/Dashboard";
 import LoginPage from "../pages/LoginPage";
 import Pembelian from "../pages/Pembelian";
-import Penjualan from "../pages/Penjualan";
 import TambahItem from "../pages/TambahItem";
 import TambahKasir from "../pages/TambahKasir";
 import TambahPelanggan from "../pages/TambahPelanggan";
 import TambahSupplier from "../pages/TambahSupplier";
 import { ProtectedRoute } from "./ProtectedRoute";
+import EditKasir from "../pages/EditKasir";
+import TambahPembelian from "../pages/TambahPembelian";
+import EditPembelian from "../pages/EditPembelian";
+import Laporan from "../pages/Laporan";
+import LaporanPenjualanRekap from "../pages/LaporanPenjualanRekap";
+import LaporanPenjualanDetail from "../pages/LaporanPenjualanDetail";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => (
     <motion.div
@@ -57,10 +62,6 @@ const Router: FC = () => {
                     element: <PageTransition><Pembelian /></PageTransition>,
                 },
                 {
-                    path: 'penjualan',
-                    element: <PageTransition><Penjualan /></PageTransition>,
-                },
-                {
                     path: 'daftar-kasir',
                     element: <PageTransition><DaftarKasir /></PageTransition>,
                 },
@@ -79,12 +80,36 @@ const Router: FC = () => {
                 {
                     path: 'tambah-kasir',
                     element: <PageTransition><TambahKasir /></PageTransition>,
+                },
+                {
+                    path: 'edit-kasir/:id',
+                    element: <PageTransition><EditKasir /></PageTransition>
+                },
+                {
+                    path: 'tambah-pembelian',
+                    element: <PageTransition><TambahPembelian /></PageTransition>
+                },
+                {
+                    path: 'edit-pembelian/:id',
+                    element: <PageTransition><EditPembelian /></PageTransition>
+                },
+                {
+                    path: 'laporan',
+                    element: <PageTransition><Laporan /></PageTransition>
                 }
             ]
         },
         {
             path: '/login',
             element: <LoginPage />
+        },
+        {
+            path: '/laporan-penjualan-rekap',
+            element: <PageTransition><LaporanPenjualanRekap /></PageTransition>
+        },
+        {
+            path: '/laporan-penjualan-detail',
+            element: <PageTransition><LaporanPenjualanDetail /></PageTransition>
         }
     ]);
 

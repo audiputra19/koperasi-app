@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { getItemResponse, inputItemRequest, inputItemResponse } from "../interfaces/items";
+import type { GetKasirDetailResponse } from "../interfaces/kasir";
 
 export const apiItems = createApi({
     reducerPath: "apiItems",
@@ -20,7 +21,7 @@ export const apiItems = createApi({
                 body
             })
         }),
-        searchItems: build.query<getItemResponse[], string>({
+        searchItems: build.query<GetKasirDetailResponse[], string>({
             query: (keyword) => `/search-items?q=${keyword}`,
         })
     }),
