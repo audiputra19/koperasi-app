@@ -63,3 +63,21 @@ export interface GetPembelianDetailResponse {
 export interface GetPembelianDetailRequest {
     idTransaksi: string;
 }
+
+export interface DeletePembelianRequest { 
+    idTransaksi: string;
+}
+
+export interface DeletePembelianResponse {
+    message: string;
+}
+
+export interface DeletePembelianDetailRequest { 
+    idTransaksi: string;
+    kdItem: string;
+    total: number;
+}
+
+export interface DeletePembelianDetailResponse {
+    message: string;
+}

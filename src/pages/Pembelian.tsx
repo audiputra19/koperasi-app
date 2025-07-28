@@ -7,6 +7,7 @@ import { useGetKasirQuery } from "../services/apiKasir";
 import moment from 'moment';
 import { TbEdit } from "react-icons/tb";
 import { useGetPembelianQuery } from "../services/apiPembelian";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 type Pembelian = {
     noTransaksi: string;
@@ -39,12 +40,20 @@ const Pembelian: FC = () => {
             userBuat: item.userBuat,
             userUbah: userUbah,
             action: (
-                <button 
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
-                >
-                    <TbEdit size={20} />
-                </button>
+                <div className="flex gap-3">
+                    <button 
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
+                    >
+                        <TbEdit size={20} />
+                    </button>
+                    <button 
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
+                    >
+                        <RiDeleteBin5Line size={20} />
+                    </button>
+                </div>
             )
         }
     })

@@ -8,8 +8,8 @@ interface DataKasir {
 }
 
 interface DataPelanggan {
-    kodePelanggan: number;
-    namaPelanggan: string;
+    kodePelanggan: number | undefined;
+    namaPelanggan: string | undefined;
 }
 
 export interface InputKasirRequest {
@@ -62,4 +62,22 @@ export interface GetKasirDetailResponse {
 
 export interface GetKasirDetailRequest {
     idTransaksi: string;
+}
+
+export interface DeleteKasirRequest { 
+    idTransaksi: string;
+}
+
+export interface DeleteKasirResponse {
+    message: string;
+}
+
+export interface DeleteKasirDetailRequest { 
+    idTransaksi: string;
+    kdItem: string;
+    total: number;
+}
+
+export interface DeleteKasirDetailResponse {
+    message: string;
 }

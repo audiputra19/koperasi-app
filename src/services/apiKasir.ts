@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { GetKasirDetailRequest, GetKasirDetailResponse, GetKasirResponse, InputKasirRequest, InputKasirResponse, UpdateKasirRequest, UpdateKasirResponse } from "../interfaces/kasir";
+import type { DeleteKasirDetailRequest, DeleteKasirDetailResponse, DeleteKasirRequest, DeleteKasirResponse, GetKasirDetailRequest, GetKasirDetailResponse, GetKasirResponse, InputKasirRequest, InputKasirResponse, UpdateKasirRequest, UpdateKasirResponse } from "../interfaces/kasir";
 
 export const apiKasir = createApi({
     reducerPath: "apiKasir",
@@ -33,8 +33,22 @@ export const apiKasir = createApi({
                 method: "POST",
                 body
             })
-        }), 
+        }),
+        deleteKasir: build.mutation<DeleteKasirResponse, DeleteKasirRequest>({
+           query: body => ({
+                url: "/delete-kasir",
+                method: "POST",
+                body
+           }) 
+        }),
+        deleteKasirDetail: build.mutation<DeleteKasirDetailResponse, DeleteKasirDetailRequest>({
+           query: body => ({
+                url: "/delete-kasirdetail",
+                method: "POST",
+                body
+           }) 
+        }) 
     }),
 })
 
-export const { useInputKasirMutation, useUpdateKasirMutation, useGetKasirQuery, useGetKasirDetailMutation } = apiKasir
+export const { useInputKasirMutation, useUpdateKasirMutation, useGetKasirQuery, useGetKasirDetailMutation, useDeleteKasirMutation, useDeleteKasirDetailMutation } = apiKasir

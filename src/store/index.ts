@@ -12,6 +12,7 @@ import { apiPelanggan } from "../services/apiPelanggan";
 import { apiItems } from "../services/apiItems";
 import { apiKasir } from "../services/apiKasir";
 import { apiPembelian } from "../services/apiPembelian";
+import { apiLaporan } from "../services/apiLaporan";
 
 const persistConfig = {
     key: 'root',
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
     [apiItems.reducerPath]: apiItems.reducer,
     [apiKasir.reducerPath]: apiKasir.reducer,
     [apiPembelian.reducerPath]: apiPembelian.reducer,
+    [apiLaporan.reducerPath]: apiLaporan.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -45,6 +47,7 @@ export const store = configureStore({
             apiItems.middleware,
             apiKasir.middleware,
             apiPembelian.middleware,
+            apiLaporan.middleware
         )
 });
 

@@ -48,7 +48,7 @@ const Laporan: FC = () => {
                                 navigate(`/laporan-penjualan-rekap?date1=${startDate}&date2=${finishDate}&autoPrint=true`)
                             }}
                         >
-                            <FaPrint size={20} />
+                            <FaPrint size={18} />
                         </button>
                     </div>
                     <div 
@@ -68,7 +68,7 @@ const Laporan: FC = () => {
                                 navigate(`/laporan-penjualan-detail?date1=${startDate}&date2=${finishDate}&autoPrint=true`)
                             }}
                         >
-                            <FaPrint size={20} />
+                            <FaPrint size={18} />
                         </button>
                     </div>
                 </div>           

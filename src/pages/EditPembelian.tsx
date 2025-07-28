@@ -11,7 +11,7 @@ import { useAlert } from "../contexts/AlertContext";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import type { getSupplierResponse } from "../interfaces/supplier";
 import { usePostMeQuery } from "../services/apiAuth";
-import { useGetPembelianDetailMutation, useGetPembelianQuery, useUpdatePembelianMutation } from "../services/apiPembelian";
+import { useDeletePembelianDetailMutation, useGetPembelianDetailMutation, useGetPembelianQuery, useUpdatePembelianMutation } from "../services/apiPembelian";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransactionPembelian, clearTransactionPembelian, deleteTransactionPembelian, updateTransactionPembelian } from "../store/pembelianSlice";
 
@@ -34,6 +34,10 @@ const EditPembelian:  FC = () => {
     const dispatch = useAppDispatch();
     const [updatePembelian, {data: pembelian, error, isSuccess}] = useUpdatePembelianMutation();
     const [getPembelianDetail, {data: listBarang, isLoading}] = useGetPembelianDetailMutation();
+    const [deletePembelianDetail, 
+            {data: delPembelianDetailData, 
+            isSuccess: delPembelianDetailSuccess, 
+            error: delPembelianDetailError}] = useDeletePembelianDetailMutation();
     const transaction = useAppSelector(state => state.pembelian.transaction);
     const [metode, setMetode] = useState(0);
     const {data} = usePostMeQuery();
@@ -45,6 +49,26 @@ const EditPembelian:  FC = () => {
     const {data: pembelianData = []} = useGetPembelianQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
+    const takePembelian = pembelianData.find(k => k.idTransaksi === idTransaksi);
+    const [jumlahPerItem, setJumlahPerItem] = useState<Record<string, number>>({});
+
+    useEffect(() => {
+        if(delPembelianDetailData && delPembelianDetailSuccess){
+            if (idTransaksi) {
+                getPembelianDetail({ idTransaksi });
+            }
+        } else if (delPembelianDetailError) {
+            const message = (error as { data?: { message?: string } }).data?.message   
+            showAlert(message ?? 'Terjadi kesalahan');
+        }
+    }, [delPembelianDetailData, delPembelianDetailSuccess, delPembelianDetailError, idTransaksi, getPembelianDetail]);
+    
+    useEffect(() => {
+        if (takePembelian?.tanggal) {
+            const parsedDate = moment(takePembelian.tanggal).toDate();
+            setStartDate(parsedDate);
+        }
+    }, [takePembelian]);
 
     useEffect(() => {
         if (idTransaksi) {
@@ -82,8 +106,9 @@ const EditPembelian:  FC = () => {
     let total = 0;
     const dataPembelian = combinedItems.map(item => {
         const jumlahValue = item.jumlah;
-        total += item.jumlah * item.harga;
-        const totalItem = item.jumlah * item.harga;
+        const jumlahFinal = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+        const totalItem = jumlahFinal * item.harga;
+        total += totalItem;
 
         return {
             kodeItem: item.kodeItem,
@@ -93,9 +118,13 @@ const EditPembelian:  FC = () => {
                 <div>
                     <input 
                         type="number"
-                        value={item.jumlah}
+                        defaultValue={item.jumlah}
                         onChange={(e) => {
                             const newStok = Number( e.target.value);
+                            setJumlahPerItem(prev => ({
+                                ...prev,
+                                [item.kodeItem]: newStok
+                            }));
                             dispatch(updateTransactionPembelian({barcode: item.barcode, stok: newStok}));
                         }}
                         className="w-16 py-1 text-center border border-gray-300 rounded-md bg-white focus:outline-none"
@@ -109,7 +138,17 @@ const EditPembelian:  FC = () => {
             action: (
                 <button 
                     className="cursor-pointer"
-                    onClick={() => dispatch(deleteTransactionPembelian(item.barcode))}
+                    onClick={() => {
+                        if(item.source === "database"){
+                            deletePembelianDetail({
+                                idTransaksi,
+                                kdItem: item.kodeItem,
+                                total: totalItem
+                            });
+                        } else {
+                            dispatch(deleteTransactionPembelian(item.barcode));
+                        }
+                    }}
                 >
                     <RiDeleteBin5Line size={20} className="text-red-500"/>
                 </button>
@@ -142,18 +181,23 @@ const EditPembelian:  FC = () => {
 
     const handleBayar = async () => {
         if (!listSupplier || !listSupplier.kode || !listSupplier.nama) {
-            showAlert("Pelanggan belum dipilih atau tidak valid");
+            showAlert("Pelanggan belum dipilih");
             return;
         }
 
-        const dataPembelian = transaction.map(item => ({
-            kodeItem: item.kodeItem,
-            namaItem: item.namaItem,
-            jenis: item.jenis,
-            jumlah: item.jumlah,
-            satuan: item.satuan,
-            harga: item.harga,
-        }));
+        const finalDataKasir = combinedItems.map(item => {
+        const jumlah = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+            return {
+                kodeItem: item.kodeItem,
+                namaItem: item.namaItem,
+                jenis: item.jenis,
+                jumlah,
+                satuan: item.satuan,
+                harga: item.harga,
+            };
+        });
+
+        const finalTotal = finalDataKasir.reduce((acc, item) => acc + (item.jumlah * item.harga), 0);
 
         const dataSupplier = {
             kodeSupplier: listSupplier.kode,
@@ -162,9 +206,9 @@ const EditPembelian:  FC = () => {
 
         try {
             await updatePembelian({
-                dataPembelian,
+                dataPembelian: finalDataKasir,
                 dataSupplier,
-                total,
+                total: finalTotal,
                 metode,
                 startDate: datePembelian,
                 userBuat: user?.nama || "",

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { GetPembelianDetailRequest, GetPembelianDetailResponse, GetPembelianResponse, InputPembelianRequest, InputPembelianResponse, UpdatePembelianRequest, UpdatePembelianResponse } from "../interfaces/pembelian";
+import type { DeletePembelianDetailRequest, DeletePembelianDetailResponse, DeletePembelianRequest, DeletePembelianResponse, GetPembelianDetailRequest, GetPembelianDetailResponse, GetPembelianResponse, InputPembelianRequest, InputPembelianResponse, UpdatePembelianRequest, UpdatePembelianResponse } from "../interfaces/pembelian";
 
 export const apiPembelian = createApi({
     reducerPath: "apiPembelian",
@@ -33,8 +33,22 @@ export const apiPembelian = createApi({
                 method: "POST",
                 body
             })
-        }), 
+        }),
+        deletePembelian: build.mutation<DeletePembelianResponse, DeletePembelianRequest>({
+            query: body => ({
+                url: "/delete-pembelian",
+                method: "POST",
+                body
+            }) 
+        }),
+        deletePembelianDetail: build.mutation<DeletePembelianDetailResponse, DeletePembelianDetailRequest>({
+            query: body => ({
+                url: "/delete-pembeliandetail",
+                method: "POST",
+                body
+            }) 
+        })
     }),
 })
 
-export const { useInputPembelianMutation, useUpdatePembelianMutation, useGetPembelianQuery, useGetPembelianDetailMutation } = apiPembelian
+export const { useInputPembelianMutation, useUpdatePembelianMutation, useGetPembelianQuery, useGetPembelianDetailMutation, useDeletePembelianMutation, useDeletePembelianDetailMutation } = apiPembelian

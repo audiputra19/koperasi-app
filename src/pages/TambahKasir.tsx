@@ -110,7 +110,12 @@ const TambahKasir:  FC = () => {
 
     const handleBayar = async () => {
         if (!listPelanggan || !listPelanggan.kode || !listPelanggan.nama) {
-            showAlert("Pelanggan belum dipilih atau tidak valid");
+            showAlert("Pelanggan belum dipilih");
+            return;
+        }
+
+        if (!metode) {
+            showAlert("Metode belum dipilih");
             return;
         }
 
@@ -124,8 +129,8 @@ const TambahKasir:  FC = () => {
         }));
 
         const dataPelanggan = {
-            kodePelanggan: listPelanggan.kode,
-            namaPelanggan: listPelanggan.nama,
+            kodePelanggan: listPelanggan?.kode,
+            namaPelanggan: listPelanggan?.nama,
         };
 
         try {

@@ -109,7 +109,7 @@ const TambahPembelian:  FC = () => {
 
     const handleBayar = async () => {
         if (!listSupplier || !listSupplier.kode || !listSupplier.nama) {
-            showAlert("Pelanggan belum dipilih atau tidak valid");
+            showAlert("Pelanggan belum dipilih");
             return;
         }
 

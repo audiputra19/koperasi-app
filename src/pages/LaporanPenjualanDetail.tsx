@@ -4,6 +4,8 @@ import { FaStore } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetKasirDetailMutation, useGetKasirQuery } from "../services/apiKasir";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
+import { useGetLaporanMutation } from "../services/apiLaporan";
+import Loading from "../components/Loading";
 
 const LaporanPenjualanDetail: FC = () => {
     const [searchParams] = useSearchParams();
@@ -13,18 +15,24 @@ const LaporanPenjualanDetail: FC = () => {
     const date1 = moment(formatDate1).format("DD/MM/YYYY");
     const date2 = moment(formatDate2).format("DD/MM/YYYY");
     const navigate = useNavigate();
-    const {data: dataKasir} = useGetKasirQuery(undefined, {
-        refetchOnMountOrArgChange: true
-    });
+    const [getLaporan, {data: dataLaporan, isLoading: kasirLoading}] = useGetLaporanMutation();
     const [getKasirDetail] = useGetKasirDetailMutation();
     const [kasirDetails, setKasirDetails] = useState<Record<string, GetKasirDetailResponse[]>>({});
+    const [loadingDetail, setLoadingDetail] = useState(true);
+
+    useEffect(() => {
+        getLaporan({
+            date1: formatDate1,
+            date2: formatDate2
+        })
+    }, [])
 
     useEffect(() => {
         const fileName = `laporan_penjualan_rekap_${moment(date1, "DD/MM/YYYY").format("YYYYMMDD")}_${moment(date2, "DD/MM/YYYY").format("YYYYMMDD")}`;
         const prevTitle = document.title;
         document.title = fileName;
-
-        if(autoPrint === "true") {
+        
+        if(autoPrint === "true" && !kasirLoading && !loadingDetail) {
             const handleAfterPrint = () => {
                 document.title = prevTitle;
                 navigate(-1); // kembali ke halaman sebelumnya
@@ -42,14 +50,16 @@ const LaporanPenjualanDetail: FC = () => {
                 document.title = prevTitle;
             };
         }
-    }, [date1, date2, autoPrint, navigate]);
+    }, [autoPrint, kasirLoading, loadingDetail, date1, date2, navigate]);
 
     useEffect(() => {
         const fetchDetails = async () => {
-            if (!dataKasir) return;
+            if (!dataLaporan) return;
+
+            setLoadingDetail(true);
 
             const details: Record<string, any[]> = {};
-            for (const item of dataKasir) {
+            for (const item of dataLaporan) {
                 try {
                     const result = await getKasirDetail({ idTransaksi: item.idTransaksi }).unwrap();
                     details[item.idTransaksi] = result;
@@ -58,13 +68,15 @@ const LaporanPenjualanDetail: FC = () => {
                 }
             }
             setKasirDetails(details);
+            setLoadingDetail(false);
         };
 
         fetchDetails();
-    }, [dataKasir, getKasirDetail]);
+    }, [dataLaporan, getKasirDetail]);
 
     return (
         <div className="text-black bg-white p-3">
+            {(kasirLoading || loadingDetail) && <Loading />}
             <div className="border border-dashed border-gray-800 bg-white text-black">
                 <div className="flex justify-between p-5">
                     <div className="flex gap-3">
@@ -103,16 +115,18 @@ const LaporanPenjualanDetail: FC = () => {
                                 <div className="border-t"></div>
                                 </td>
                             </tr>
-                            {dataKasir?.map(item => {
+                            {dataLaporan?.map(item => {
                                 const detail = kasirDetails[item.idTransaksi];
                                 let totalJml = 0;
                                 let totalAll = 0;
+
+                                const tanggal = moment(item.tanggal).format("YYYY-MM-DD HH:mm:ss");
 
                                 return (
                                     <Fragment key={item.idTransaksi}>
                                         <tr className="text-xs text-black">
                                             <td className="text-center px-2 py-1">{item.idTransaksi}</td>
-                                            <td className="text-center px-2 py-1">{item.tanggal}</td>
+                                            <td className="text-center px-2 py-1">{tanggal}</td>
                                             <td className="text-center px-2 py-1">{item.kdPelanggan}</td>
                                             <td className="text-start px-2 py-1">{item.namaPelanggan}</td>
                                         </tr>

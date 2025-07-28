@@ -11,7 +11,7 @@ import { useAlert } from "../contexts/AlertContext";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import type { GetPelangganResponse } from "../interfaces/pelanggan";
 import { usePostMeQuery } from "../services/apiAuth";
-import { useGetKasirDetailMutation, useGetKasirQuery, useInputKasirMutation, useUpdateKasirMutation } from "../services/apiKasir";
+import { useDeleteKasirDetailMutation, useGetKasirDetailMutation, useGetKasirQuery, useInputKasirMutation, useUpdateKasirMutation } from "../services/apiKasir";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransaction, clearTransaction, deleteTransaction, updateTransaction } from "../store/kasirSlice";
 import moment from "moment";
@@ -34,6 +34,10 @@ const EditKasir:  FC = () => {
     const dispatch = useAppDispatch();
     const [updateKasir, {data: kasir, error, isSuccess}] = useUpdateKasirMutation();
     const [getKasirDetail, {data: listBarang, isLoading}] = useGetKasirDetailMutation();
+    const [deleteKasirDetail, 
+        {data: delKasirDetailData, 
+        isSuccess: delKasirDetailSuccess, 
+        error: delKasirDetailError}] = useDeleteKasirDetailMutation();
     const transaction = useAppSelector(state => state.kasir.transaction);
     const [metode, setMetode] = useState(0);
     const {data} = usePostMeQuery();
@@ -46,6 +50,29 @@ const EditKasir:  FC = () => {
         refetchOnMountOrArgChange: true
     });
     const takeKasir = kasirData.find(k => k.idTransaksi === idTransaksi);
+    const [jumlahPerItem, setJumlahPerItem] = useState<Record<string, number>>({});
+
+    useEffect(() => {
+        if(delKasirDetailData && delKasirDetailSuccess){
+            if (idTransaksi) {
+                getKasirDetail({ idTransaksi });
+            }
+        } else if (delKasirDetailError) {
+            const message = (error as { data?: { message?: string } }).data?.message   
+            showAlert(message ?? 'Terjadi kesalahan');
+        }
+    }, [delKasirDetailData, delKasirDetailSuccess, delKasirDetailError, idTransaksi, getKasirDetail]);
+
+    useEffect(() => {
+        if (takeKasir?.tanggal) {
+            const parsedDate = moment(takeKasir.tanggal).toDate();
+            setStartDate(parsedDate);
+        }
+
+        if (takeKasir?.metode) {
+            setMetode(takeKasir.metode);
+        }
+    }, [takeKasir]);
 
     useEffect(() => {
         if (idTransaksi) {
@@ -82,8 +109,9 @@ const EditKasir:  FC = () => {
 
     let total = 0;
     const dataKasir = combinedItems?.map(item => {
-        total += item.jumlah * item.harga;
-        const totalItem = item.jumlah * item.harga;
+        const jumlahFinal = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+        const totalItem = jumlahFinal * item.harga;
+        total += totalItem;
 
         return {
             kodeItem: item.kodeItem,
@@ -93,9 +121,13 @@ const EditKasir:  FC = () => {
                 <div>
                     <input 
                         type="number"
-                        value={item.jumlah}
+                        defaultValue={item.jumlah}
                         onChange={(e) => {
                             const newStok = Number( e.target.value);
+                            setJumlahPerItem(prev => ({
+                                ...prev,
+                                [item.kodeItem]: newStok
+                            }));
                             dispatch(updateTransaction({barcode: item.kodeItem, stok: newStok}));
                         }}
                         className="w-16 py-1 text-center border border-gray-300 rounded-md focus:outline-none"
@@ -108,7 +140,17 @@ const EditKasir:  FC = () => {
             action: (
                 <button 
                     className="cursor-pointer"
-                    onClick={() => dispatch(deleteTransaction(item.barcode))}
+                    onClick={() => {
+                        if(item.source === "database"){
+                            deleteKasirDetail({
+                                idTransaksi,
+                                kdItem: item.kodeItem,
+                                total: totalItem
+                            });
+                        } else {
+                            dispatch(deleteTransaction(item.barcode));
+                        }
+                    }}
                 >
                     <RiDeleteBin5Line size={20} className="text-red-500"/>
                 </button>
@@ -129,18 +171,28 @@ const EditKasir:  FC = () => {
 
     const handleBayar = async () => {
         if (!listPelanggan || !listPelanggan.kode || !listPelanggan.nama) {
-            showAlert("Pelanggan belum dipilih atau tidak valid");
+            showAlert("Pelanggan belum dipilih");
             return;
         }
 
-        const dataKasir = transaction?.map(item => ({
-            kodeItem: item.kodeItem,
-            namaItem: item.namaItem,
-            jenis: item.jenis,
-            jumlah: item.jumlah,
-            satuan: item.satuan,
-            harga: item.harga,
-        }));
+        if (!metode) {
+            showAlert("Metode belum dipilih");
+            return;
+        }
+
+        const finalDataKasir = combinedItems.map(item => {
+        const jumlah = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+            return {
+                kodeItem: item.kodeItem,
+                namaItem: item.namaItem,
+                jenis: item.jenis,
+                jumlah,
+                satuan: item.satuan,
+                harga: item.harga,
+            };
+        });
+
+        const finalTotal = finalDataKasir.reduce((acc, item) => acc + (item.jumlah * item.harga), 0);
 
         const dataPelanggan = {
             kodePelanggan: listPelanggan.kode,
@@ -149,9 +201,9 @@ const EditKasir:  FC = () => {
 
         try {
             await updateKasir({
-                dataKasir,
+                dataKasir: finalDataKasir,
                 dataPelanggan,
-                total,
+                total: finalTotal,
                 metode,
                 startDate: dateKasir,
                 userBuat: user?.nama || "",
@@ -257,7 +309,7 @@ const EditKasir:  FC = () => {
                                             id="tunai" 
                                             value="1" 
                                             className="mr-1"
-                                            checked={takeKasir?.metode === 1}
+                                            checked={metode === 1}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="tunai" className="text-sm font-semibold text-gray-500">Tunai</label>
@@ -269,7 +321,7 @@ const EditKasir:  FC = () => {
                                             id="kredit" 
                                             value="2" 
                                             className="mr-1"
-                                            checked={takeKasir?.metode === 2}
+                                            checked={metode === 2}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="kredit" className="text-sm font-semibold text-gray-500">Kredit</label>
@@ -281,7 +333,7 @@ const EditKasir:  FC = () => {
                                             id="qris" 
                                             value="3" 
                                             className="mr-1"
-                                            checked={takeKasir?.metode === 3}
+                                            checked={metode === 3}
                                             onChange={(e) => setMetode(Number(e.target.value))}
                                         />
                                         <label htmlFor="qris" className="text-sm font-semibold text-gray-500">QRIS</label>

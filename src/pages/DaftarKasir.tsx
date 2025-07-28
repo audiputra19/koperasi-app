@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetKasirQuery } from "../services/apiKasir";
 import moment from 'moment';
 import { TbEdit } from "react-icons/tb";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 type Kasir = {
     noTransaksi: string;
@@ -38,12 +40,20 @@ const DaftarKasir: FC = () => {
             userBuat: item.userBuat,
             userUbah: userUbah,
             action: (
-                <button 
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/edit-kasir/${encodeURIComponent(item.idTransaksi)}`)}
-                >
-                    <TbEdit size={20} />
-                </button>
+                <div className="flex gap-3">
+                    <button 
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/edit-kasir/${encodeURIComponent(item.idTransaksi)}`)}
+                    >
+                        <TbEdit size={20} />
+                    </button>
+                    <button 
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/edit-kasir/${encodeURIComponent(item.idTransaksi)}`)}
+                    >
+                        <RiDeleteBin5Line size={20} />
+                    </button>
+                </div>
             )
         }
     })
