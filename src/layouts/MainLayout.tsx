@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { ArrowLeft, ChevronDown, ChevronRight, LogOut, Settings, User } from "lucide-react";
-import { useState, type FC } from "react";
-import { FaStore } from "react-icons/fa6";
+import { ArrowLeft, ChevronDown, ChevronRight, LogOut, Settings, User, X } from "lucide-react";
+import { useEffect, useState, type FC } from "react";
+import { FaBars, FaStore, FaXmark } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getTitle } from "../constants/GetTitle";
 import { sidebarMenu } from "../constants/SidebarMenu";
@@ -23,6 +23,14 @@ const MainLayout: FC = () => {
     const user = data?.user;
     const isKasirPage = path === "/tambah-kasir" || /^\/edit-kasir\/.+/.test(path);
     const isPembelianPage = path === "/tambah-pembelian" || /^\/edit-pembelian\/.+/.test(path);
+    const [collapsed, setCollapsed] = useState<boolean>(() => {
+        const saved = localStorage.getItem("sidebarCollapsed");
+        return saved === "true"; // true kalau string 'true'
+    });
+
+    useEffect(() => {
+        localStorage.setItem("sidebarCollapsed", String(collapsed));
+    }, [collapsed]);
 
     const matchedMenu = sidebarMenu.find((menu) => {
         if (menu.submenus) {
@@ -130,11 +138,25 @@ const MainLayout: FC = () => {
             {/* Desktop */}
             <div className="hidden sm:block">
                 <Alert />
-                <div className="w-64 border-r-2 border-gray-100 min-h-screen fixed">
+                <div
+                    className={clsx(
+                        "w-64 border-r-2 border-gray-100 min-h-screen fixed z-20 bg-white transition-transform duration-300 ease-in-out",
+                        collapsed ? "-translate-x-full" : "translate-x-0"
+                    )}
+                >
                     <div className="p-5">
-                        <div className="flex items-center text-white gap-3">
-                            <FaStore size={25} className="text-slate-800"/>
-                            <p className="font-bold text-lg text-slate-800">Koperasi Sarandi</p>
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center text-white gap-3">
+                                <FaStore size={30} className="text-slate-800"/>
+                                <p className="font-bold text-xl text-slate-800">Kopsa</p>
+                            </div>
+                            {!collapsed && (
+                                <X 
+                                    onClick={() => setCollapsed(true)} 
+                                    className="text-slate-800 cursor-pointer hover:text-blue-500 mr-2"
+                                    size={25}
+                                />
+                            )}
                         </div>
                     </div>
 
@@ -143,9 +165,21 @@ const MainLayout: FC = () => {
                         {listMenu}
                     </div>
                 </div>
-                <div className="ml-64 bg-gray-50 min-h-screen">
+                <div
+                    className={clsx(
+                        "transition-all duration-300 bg-gray-50 min-h-screen",
+                        collapsed ? "ml-0" : "ml-64"
+                    )}
+                >
                     <div className="flex justify-between items-center p-5 h-17 bg-white border-b-2 border-gray-100 sticky top-0 z-10">
                         <div className="flex items-center gap-3">
+                            {collapsed && (
+                                <FaBars
+                                    onClick={() => setCollapsed(false)}
+                                    className="text-slate-800 cursor-pointer hover:text-blue-500 mr-2"
+                                    size={20}
+                                />
+                            )}
                             {!matchedMenu && (
                                 <ArrowLeft 
                                     onClick={() => {

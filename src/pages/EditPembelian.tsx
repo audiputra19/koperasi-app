@@ -20,6 +20,7 @@ type Kasir = {
     keterangan: string;
     jenis: string;
     jumlah: JSX.Element;
+    expired: JSX.Element;
     jumlahValue: number;
     satuan: string;
     harga: number;
@@ -27,7 +28,6 @@ type Kasir = {
     action: JSX.Element;
 };
 const EditPembelian:  FC = () => {
-    const [step, setStep] = useState(1);
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const datePembelian = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
     const [listSupplier, setListSupplier] = useState<getSupplierResponse>();
@@ -51,6 +51,7 @@ const EditPembelian:  FC = () => {
     });
     const takePembelian = pembelianData.find(k => k.idTransaksi === idTransaksi);
     const [jumlahPerItem, setJumlahPerItem] = useState<Record<string, number>>({});
+    const [expiredPerItem, setExpiredPerItem] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if(delPembelianDetailData && delPembelianDetailSuccess){
@@ -107,6 +108,7 @@ const EditPembelian:  FC = () => {
     const dataPembelian = combinedItems.map(item => {
         const jumlahValue = item.jumlah;
         const jumlahFinal = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+        const expiredFinal = expiredPerItem[item.kodeItem] ?? item.expiredDate;
         const totalItem = jumlahFinal * item.harga;
         total += totalItem;
 
@@ -129,6 +131,29 @@ const EditPembelian:  FC = () => {
                         }}
                         className="w-16 py-1 text-center border border-gray-300 rounded-md bg-white focus:outline-none"
                     />    
+                </div>
+            ),
+            expired: (
+                <div className="relative overflow-visible">
+                    <DatePickerInput
+                        selectedDate={expiredFinal ? new Date(expiredFinal) : null}
+                        onDateChange={(date) => {
+                            const newDate = date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : "";
+                            setExpiredPerItem(prev => ({
+                                ...prev,
+                                [item.kodeItem]: newDate
+                            }));
+
+                            // Kalau item dari Redux, update juga ke Redux
+                            if (item.source === "redux") {
+                                dispatch(updateTransactionPembelian({
+                                    barcode: item.barcode,
+                                    expiredDate: newDate
+                                }));
+                            }
+                        }}
+                        insideTable
+                    />
                 </div>
             ),
             jumlahValue,
@@ -169,6 +194,7 @@ const EditPembelian:  FC = () => {
             sortable: false,
             render: (row) => Number(row.harga).toLocaleString("id-ID"),
         },
+        { key: "expired", label: "Expired", align: "center", sortable: false },
         {
             key: "total",
             label: "Total",
@@ -186,7 +212,9 @@ const EditPembelian:  FC = () => {
         }
 
         const finalDataKasir = combinedItems.map(item => {
-        const jumlah = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+            const jumlah = jumlahPerItem[item.kodeItem] ?? item.jumlah;
+            const expiredDate = expiredPerItem[item.kodeItem] ?? item.expiredDate;
+
             return {
                 kodeItem: item.kodeItem,
                 namaItem: item.namaItem,
@@ -194,6 +222,7 @@ const EditPembelian:  FC = () => {
                 jumlah,
                 satuan: item.satuan,
                 harga: item.harga,
+                expiredDate
             };
         });
 

@@ -11,6 +11,7 @@ type Pelanggan = {
     nama: string;
     groupPel: string;
     limitBelanja: number;
+    kredit: string;
     action: JSX.Element;
 };
 const DaftarPelanggan: FC = () => {
@@ -29,6 +30,13 @@ const DaftarPelanggan: FC = () => {
         } else {
             group = "";
         }
+        
+        let kredit = "";
+        if(item.kredit === 1) {
+            kredit = "Ya";
+        } else if (item.kredit === 2) {
+            kredit = "Tidak";
+        }
 
         const limitBelanja = item.limitBelanja > 0 ? item.limitBelanja : 0;
 
@@ -37,6 +45,7 @@ const DaftarPelanggan: FC = () => {
             nama: item.nama, 
             groupPel: group, 
             limitBelanja: limitBelanja,
+            kredit: kredit,
             action: (
                 <button 
                     className="cursor-pointer"
@@ -53,6 +62,7 @@ const DaftarPelanggan: FC = () => {
         { key: "nama", label: "Nama", align: "left", sortable: true },
         { key: "groupPel", label: "Group Pelanggan", align: "center", sortable: true },
         { key: "limitBelanja", label: "Limit Belanja", align: "center", sortable: true },
+        { key: "kredit", label: "Kredit", align: "center", sortable: true },
         { key: "action", label: "Action", align: "center" },
     ];
 

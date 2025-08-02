@@ -22,8 +22,8 @@ const Loading: FC = () => {
   }, []);
 
   return (
-        <div className="fixed inset-0 flex justify-center items-center z-[10]">
-                <div className="absolute inset-0 bg-black/30 z-10   " />
+        <div className="fixed inset-0 flex justify-center items-center z-[20]">
+                <div className="absolute inset-0 bg-black/30 z-[15]" />
                 <div className="relative z-20 bg-white rounded-lg shadow-md px-12 py-10 flex flex-col items-center gap-2">
                     <div className="animate-spin text-blue-500">
                         <LoaderCircle size={42} />

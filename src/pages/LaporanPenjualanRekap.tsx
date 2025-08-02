@@ -10,6 +10,7 @@ const LaporanPenjualanRekap: FC = () => {
     const [searchParams] = useSearchParams();
     const formatDate1 = searchParams.get("date1");
     const formatDate2 = searchParams.get("date2");
+    const kdPelanggan = searchParams.get("kdPelanggan");
     const autoPrint = searchParams.get("autoPrint");
     const date1 = moment(formatDate1).format("DD/MM/YYYY");
     const date2 = moment(formatDate2).format("DD/MM/YYYY");
@@ -22,7 +23,8 @@ const LaporanPenjualanRekap: FC = () => {
     useEffect(() => {
         getLaporan({
             date1: formatDate1,
-            date2: formatDate2
+            date2: formatDate2,
+            kdPelanggan
         })
     }, [])
 
@@ -71,6 +73,22 @@ const LaporanPenjualanRekap: FC = () => {
 
         fetchDetails();
     }, [dataLaporan, getKasirDetail]);
+
+    const totalItem = dataLaporan?.reduce((total, item) => {
+        const detail = kasirDetails[item.idTransaksi];
+        return total + (detail?.length || 0);
+    }, 0) || 0;
+
+    const totalAkhir = dataLaporan?.reduce((total, item) => {
+        return total + item.total; 
+    }, 0) || 0;
+
+    const totalMetode = dataLaporan?.reduce((acc, item) => {
+        if (item.metode === 1) acc.tunai += item.total;
+        if (item.metode === 2) acc.kredit += item.total;
+        if (item.metode === 3) acc.qris += item.total;
+        return acc;
+    }, {tunai: 0, kredit: 0, qris: 0}) || {tunai: 0, kredit: 0, qris: 0};
 
     return (
         <div className="text-black bg-white p-3">
@@ -153,6 +171,16 @@ const LaporanPenjualanRekap: FC = () => {
                                 )
                             })}
                         </tbody>
+                        <tfoot>
+                            <tr className="text-xs">
+                                <th colSpan={4} className="text-right">Total</th>
+                                <th className="text-center px-2 py-1">{totalItem.toLocaleString("id-ID")}</th>
+                                <th className="text-right px-2 py-1">{totalAkhir.toLocaleString("id-ID")}</th>
+                                <th className="text-right px-2 py-1">{totalMetode.tunai.toLocaleString("id-ID")}</th>
+                                <th className="text-right px-2 py-1">{totalMetode.kredit.toLocaleString("id-ID")}</th>
+                                <th className="text-right px-2 py-1">{totalMetode.qris.toLocaleString("id-ID")}</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

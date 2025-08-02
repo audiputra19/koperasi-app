@@ -8,6 +8,7 @@ import moment from 'moment';
 import { TbEdit } from "react-icons/tb";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import Loading from "../components/Loading";
 
 type Kasir = {
     noTransaksi: string;
@@ -23,7 +24,7 @@ type Kasir = {
 const DaftarKasir: FC = () => {
     const title = getTitle();
     const navigate = useNavigate();
-    const {data} = useGetKasirQuery(undefined, {
+    const {data, isLoading} = useGetKasirQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
         
@@ -60,9 +61,9 @@ const DaftarKasir: FC = () => {
 
     const columns: Column<Kasir>[] = [
         { key: "noTransaksi", label: "No. Transaksi", align: "center", sortable: true },
-        { key: "tanggal", label: "Tanggal", align: "center", sortable: true },
+        { key: "tanggal", label: "Tanggal", align: "center", width: 200, sortable: true },
         { key: "kodePel", label: "Kd Pelanggan", align: "center", sortable: true },
-        { key: "nama", label: "Nama", align: "left", sortable: true },
+        { key: "nama", label: "Nama", align: "left", width: 200, sortable: true },
         { key: "total", label: "Total", align: "right", sortable: true },
         { key: "userBuat", label: "User Buat", align: "center", sortable: true },
         { key: "userUbah", label: "User Ubah", align: "center", sortable: true },
@@ -71,6 +72,7 @@ const DaftarKasir: FC = () => {
 
     return (
         <div>
+            {isLoading && <Loading />}
             <div className="flex justify-between items-center">
                 <div></div>
                 <div>

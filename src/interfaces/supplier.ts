@@ -3,6 +3,7 @@ export interface InputSuppResponse {
 }
 
 export interface InputSuppRequest {
+    kdSupp?: string;
     nama: string;
     alamat: string
 }

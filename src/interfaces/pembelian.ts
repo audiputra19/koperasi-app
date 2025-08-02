@@ -5,6 +5,7 @@ interface DataPembelian {
     jumlah: number;
     satuan: string;
     harga: number;
+    expireDate?: string;
 }
 
 interface DataSupplier {
@@ -58,6 +59,7 @@ export interface GetPembelianDetailResponse {
     jumlah: number;
     satuan: string
     harga: number;
+    expiredDate?: string;
 }
 
 export interface GetPembelianDetailRequest {

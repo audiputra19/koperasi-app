@@ -170,9 +170,9 @@ export function DataTable<T extends Record<string, any>>({
                 </div>
             </div>
 
-            <div className="overflow-x-auto max-h-[380px]">
+            <div className="overflow-x-auto max-h-[375px]">
                 <table className="table table-zebra w-full">
-                    <thead className="sticky top-0 bg-white text-gray-400 shadow-sm shadow-gray-100">
+                    <thead className="sticky top-0 bg-white text-gray-500 shadow-sm shadow-gray-100">
                         <tr>
                         <th>No</th>
                         {columns.map((col) => (

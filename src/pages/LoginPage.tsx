@@ -46,7 +46,7 @@ const LoginPage: FC = () => {
                 <div className="bg-blue-500 rounded-l-2xl">
                     <div className="flex items-center text-blue-100 gap-2 pt-5 px-5">
                         <FaStore size={20}/>
-                        <p className="font-bold">Kopsas</p>
+                        <p className="font-bold">Kopsa</p>
                     </div>
                     <div className="bg-blue-600 rounded-2xl shadow-lg mt-10 mx-5 p-5">
                         <div className="">

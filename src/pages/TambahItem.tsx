@@ -15,6 +15,7 @@ const TambahItem:FC = () => {
         jenis: "",
         hargaBeli: 0,
         hargaJual: 0,
+        persenJual: 0,
         hpp: "",
         stokMinimal: 0,
         status: 0,
@@ -24,7 +25,18 @@ const TambahItem:FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const fromPage = location.state?.from ?? 'daftar-item';
-    //console.log(fromPage)
+    const [manualHargaJual, setManualHargaJual] = useState(false);
+    console.log(form)
+
+    useEffect(() => {
+        if (!manualHargaJual) {
+            const total = form.hargaBeli + (form.hargaBeli * form.persenJual / 100);
+            setFrom(prev => ({
+                ...prev,
+                hargaJual: Math.floor(total)
+            }));
+        }
+    }, [form.hargaBeli, form.persenJual]);
 
     useEffect(() => {
         if(isSuccess && data) {
@@ -174,16 +186,29 @@ const TambahItem:FC = () => {
                                 Harga Jual
                                 <span className="text-red-500">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                name="jual" 
-                                id="jual" 
-                                className="w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
-                                onChange={(e) => setFrom(prev => ({
-                                    ...prev,
-                                    hargaJual: Number(e.target.value)
-                                }))}  
-                            />
+                            <div className="flex gap-2 items-center">
+                                <input 
+                                    type="text" 
+                                    className="w-1/4 border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
+                                    onChange={(e) => setFrom(prev => ({
+                                        ...prev,
+                                        persenJual: Number(e.target.value)
+                                    }))}  
+                                />
+                                <span className="text-sm font-bold text-gray-400">%</span>
+                                <input 
+                                    type="text" 
+                                    value={form.hargaJual}
+                                    onChange={(e) => {
+                                        setManualHargaJual(true);
+                                        setFrom(prev => ({
+                                            ...prev,
+                                            hargaJual: Number(e.target.value)
+                                        }));
+                                    }}
+                                    className="w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"  
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-1">

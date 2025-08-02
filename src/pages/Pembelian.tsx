@@ -8,6 +8,7 @@ import moment from 'moment';
 import { TbEdit } from "react-icons/tb";
 import { useGetPembelianQuery } from "../services/apiPembelian";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import Loading from "../components/Loading";
 
 type Pembelian = {
     noTransaksi: string;
@@ -23,7 +24,7 @@ type Pembelian = {
 const Pembelian: FC = () => {
     const title = getTitle();
     const navigate = useNavigate();
-    const {data} = useGetPembelianQuery(undefined, {
+    const {data, isLoading} = useGetPembelianQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
         
@@ -60,7 +61,7 @@ const Pembelian: FC = () => {
 
     const columns: Column<Pembelian>[] = [
         { key: "noTransaksi", label: "No. Transaksi", align: "center", sortable: true },
-        { key: "tanggal", label: "Tanggal", align: "center", sortable: true },
+        { key: "tanggal", label: "Tanggal", align: "center", width: 200, sortable: true },
         { key: "kodeSupp", label: "Kd Supplier", align: "center", sortable: true },
         { key: "nama", label: "Nama", align: "left", sortable: true },
         { key: "total", label: "Total", align: "right", sortable: true },
@@ -71,6 +72,7 @@ const Pembelian: FC = () => {
 
     return (
         <div>
+            {isLoading && <Loading />}
             <div className="flex justify-between items-center">
                 <div></div>
                 <div>

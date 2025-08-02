@@ -21,10 +21,15 @@ const pembelianSlice = createSlice({
                 state.transaction.push({ ...action.payload, jumlah: Number(1) });
             }
         },
-        updateTransactionPembelian: (state, action: PayloadAction<{ barcode: string, stok: number }>) => {
+        updateTransactionPembelian: (state, action: PayloadAction<{ barcode: string, stok?: number, expiredDate?: string }>) => {
             const item = state.transaction.find(item => item.barcode === action.payload.barcode);
             if (item) {
-                item.jumlah = action.payload.stok;
+                if (typeof action.payload.stok !== "undefined") {
+                    item.jumlah = action.payload.stok;
+                }
+                if (typeof action.payload.expiredDate !== "undefined") {
+                    item.expiredDate = action.payload.expiredDate;
+                }
             }
         },
         deleteTransactionPembelian: (state, action: PayloadAction<string>) => {

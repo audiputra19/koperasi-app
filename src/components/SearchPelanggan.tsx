@@ -37,6 +37,7 @@ const SearchPelanggan:FC<onSelectUserProps> = ({ onSelectUser }) => {
                 nama: namaPelanggan.namaPelanggan,
                 idKategori: 0,
                 limitBelanja: 0,
+                kredit: 0
             };
             setSearch(pelangganFromKasir.nama);
             setSelectedUser(pelangganFromKasir);

@@ -9,7 +9,7 @@ const TambahPelanggan:FC = () => {
     const {id} = useParams();
     const {data} = useGetPelangganQuery(undefined, {refetchOnMountOrArgChange: true});
     const pelanggan = data?.find(item => item.kode === Number(id));
-    const [form, setForm] = useState({ kode: id, idKategori: 0, limitBelanja: 0 });
+    const [form, setForm] = useState({ kode: id, idKategori: 0, limitBelanja: 0, kredit: 0 });
     const [inputPelanggan, {data: dataPelanggan, isLoading, isSuccess, error}] = useInputPelangganMutation();
     const {showAlert} = useAlert();
     const navigate = useNavigate();
@@ -56,7 +56,7 @@ const TambahPelanggan:FC = () => {
                             name="group-pel" 
                             id="group-pel" 
                             className="select w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
-                            value={pelanggan?.idKategori}
+                            defaultValue={pelanggan?.idKategori}
                             onChange={(e) => 
                                 setForm(prev => ({
                                     ...prev,
@@ -78,13 +78,34 @@ const TambahPelanggan:FC = () => {
                             name="limit-belanja" 
                             id="limit-belanja"
                             className="w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none" 
-                            value={pelanggan?.limitBelanja}
+                            defaultValue={pelanggan?.limitBelanja}
                             onChange={(e) => 
                                 setForm(prev => ({
                                     ...prev,
                                     limitBelanja: Number(e.target.value)
                                 }))}
                         />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="group-pel" className="block text-sm font-medium text-gray-500">
+                            Kredit
+                            <span className="text-red-500">*</span>
+                        </label>
+                        <select 
+                            name="group-pel" 
+                            id="group-pel" 
+                            className="select w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
+                            value={pelanggan?.idKategori}
+                            onChange={(e) => 
+                                setForm(prev => ({
+                                    ...prev,
+                                    kredit: Number(e.target.value)
+                                }))}
+                        >
+                            <option value="">- Pilih Data -</option>
+                            <option value="1">Ya</option>
+                            <option value="2">Tidak</option>
+                        </select>
                     </div>
                 </div>
                 <div className="flex justify-end mt-5 border-t border-gray-300 pt-5">

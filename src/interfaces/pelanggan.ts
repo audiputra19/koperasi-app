@@ -3,11 +3,13 @@ export interface GetPelangganResponse {
     nama: string;
     idKategori: number;
     limitBelanja: number;
+    kredit: number;
 }
 
 export interface InputPelangganRequest {
     idKategori: number;
     limitBelanja: number;
+    kredit: number;
 }
 
 export interface InputPelangganResponse {

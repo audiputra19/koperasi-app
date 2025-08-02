@@ -15,19 +15,20 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { addTransactionPembelian, clearTransactionPembelian, deleteTransactionPembelian, updateTransactionPembelian } from "../store/pembelianSlice";
 import { useInputPembelianMutation } from "../services/apiPembelian";
 import { FaSave } from "react-icons/fa";
+import type { GetPembelianDetailResponse } from "../interfaces/pembelian";
 
 type Kasir = {
     kodeItem: string;
     keterangan: string;
     jenis: string;
     jumlah: JSX.Element;
+    expired: JSX.Element;
     satuan: string;
     harga: string;
     total: string;
     action: JSX.Element;
 };
 const TambahPembelian:  FC = () => {
-    const [step, setStep] = useState(1);
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const datePembelian = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
     const [listSupplier, setListSupplier] = useState<getSupplierResponse>();
@@ -52,7 +53,7 @@ const TambahPembelian:  FC = () => {
         }
     }, [data, isSuccess, error]);
 
-    const handleSelectItem = (barang: GetKasirDetailResponse) => {
+    const handleSelectItem = (barang: GetPembelianDetailResponse) => {
         dispatch(addTransactionPembelian(barang));
     }
 
@@ -82,6 +83,20 @@ const TambahPembelian:  FC = () => {
                     />    
                 </div>
             ),
+            expired: (
+                <div className="relative overflow-visible">
+                    <DatePickerInput
+                        selectedDate={item.expiredDate ? new Date(item.expiredDate) : null}
+                        onDateChange={(date) => {
+                            dispatch(updateTransactionPembelian({
+                                barcode: item.barcode,
+                                expiredDate: date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : ""
+                            }));
+                        }}
+                        insideTable
+                    />
+                </div>
+            ),
             satuan: item.satuan,
             harga: item.harga.toLocaleString("id-ID"),
             total: totalItem.toLocaleString("id-ID"),
@@ -101,6 +116,7 @@ const TambahPembelian:  FC = () => {
         { key: "keterangan", label: "Keterangan", align: "left", sortable: false },
         { key: "jenis", label: "Jenis", align: "center", sortable: false },
         { key: "jumlah", label: "Jumlah", align: "center", sortable: false },
+        { key: "expired", label: "Expired", align: "center", sortable: false },
         { key: "satuan", label: "Satuan", align: "center", sortable: false },
         { key: "harga", label: "Harga", align: "right", sortable: false },
         { key: "total", label: "Total", align: "right", sortable: false },
@@ -120,6 +136,7 @@ const TambahPembelian:  FC = () => {
             jumlah: item.jumlah,
             satuan: item.satuan,
             harga: item.harga,
+            expiredDate: item.expiredDate
         }));
 
         const dataSupplier = {

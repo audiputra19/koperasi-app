@@ -12,6 +12,7 @@ const LaporanPenjualanDetail: FC = () => {
     const formatDate1 = searchParams.get("date1");
     const formatDate2 = searchParams.get("date2");
     const autoPrint = searchParams.get("autoPrint");
+    const kdPelanggan = searchParams.get("kdPelanggan");
     const date1 = moment(formatDate1).format("DD/MM/YYYY");
     const date2 = moment(formatDate2).format("DD/MM/YYYY");
     const navigate = useNavigate();
@@ -23,7 +24,8 @@ const LaporanPenjualanDetail: FC = () => {
     useEffect(() => {
         getLaporan({
             date1: formatDate1,
-            date2: formatDate2
+            date2: formatDate2,
+            kdPelanggan
         })
     }, [])
 

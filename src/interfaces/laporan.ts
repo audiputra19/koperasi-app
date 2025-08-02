@@ -1,6 +1,7 @@
 export interface getLaporanRequest {
     date1: string | null;
     date2: string | null;
+    kdPelanggan: string | null;
 }
 
 export interface getLaporanResponse {
