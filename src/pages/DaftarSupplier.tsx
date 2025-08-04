@@ -1,12 +1,11 @@
-import { useEffect, type FC, type JSX } from "react";
+import { type FC, type JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
+import { TbEdit } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
+import Loading from "../components/Loading";
 import { getTitle } from "../constants/GetTitle";
 import { useGetSupplierQuery } from "../services/apiSupplier";
-import Loading from "../components/Loading";
-import type { getSupplierResponse } from "../interfaces/supplier";
-import { TbEdit } from "react-icons/tb";
 
 type Supplier = {
     kode: string;

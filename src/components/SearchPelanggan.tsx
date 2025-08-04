@@ -1,9 +1,9 @@
-import { useEffect, useState, type FC } from "react";
-import type { GetPelangganResponse } from "../interfaces/pelanggan";
-import { useSearchPelangganQuery } from "../services/apiPelanggan";
 import { LucideCircleX } from "lucide-react";
-import { useGetKasirQuery } from "../services/apiKasir";
+import { useEffect, useState, type FC } from "react";
 import { useParams } from "react-router-dom";
+import type { GetPelangganResponse } from "../interfaces/pelanggan";
+import { useGetKasirQuery } from "../services/apiKasir";
+import { useSearchPelangganQuery } from "../services/apiPelanggan";
 
 interface onSelectUserProps {
     onSelectUser: (user: GetPelangganResponse) => void

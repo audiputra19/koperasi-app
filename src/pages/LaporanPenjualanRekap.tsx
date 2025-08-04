@@ -2,9 +2,9 @@ import moment from "moment";
 import { useEffect, useState, type FC } from "react";
 import { FaStore } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useGetKasirDetailMutation, useGetKasirQuery } from "../services/apiKasir";
-import { useGetLaporanMutation } from "../services/apiLaporan";
 import Loading from "../components/Loading";
+import { useGetKasirDetailMutation } from "../services/apiKasir";
+import { useGetLaporanMutation } from "../services/apiLaporan";
 
 const LaporanPenjualanRekap: FC = () => {
     const [searchParams] = useSearchParams();

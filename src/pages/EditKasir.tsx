@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import moment from "moment";
 import { useEffect, useState, type FC, type JSX } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -11,10 +12,9 @@ import { useAlert } from "../contexts/AlertContext";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import type { GetPelangganResponse } from "../interfaces/pelanggan";
 import { usePostMeQuery } from "../services/apiAuth";
-import { useDeleteKasirDetailMutation, useGetKasirDetailMutation, useGetKasirQuery, useInputKasirMutation, useUpdateKasirMutation } from "../services/apiKasir";
+import { useDeleteKasirDetailMutation, useGetKasirDetailMutation, useGetKasirQuery, useUpdateKasirMutation } from "../services/apiKasir";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransaction, clearTransaction, deleteTransaction, updateTransaction } from "../store/kasirSlice";
-import moment from "moment";
 
 type Kasir = {
     kodeItem: string;

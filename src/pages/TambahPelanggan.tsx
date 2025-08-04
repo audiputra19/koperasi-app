@@ -1,9 +1,9 @@
 import { useEffect, useState, type FC } from "react";
 import { FaSave } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetPelangganQuery, useInputPelangganMutation } from "../services/apiPelanggan";
-import { useAlert } from "../contexts/AlertContext";
 import Loading from "../components/Loading";
+import { useAlert } from "../contexts/AlertContext";
+import { useGetPelangganQuery, useInputPelangganMutation } from "../services/apiPelanggan";
 
 const TambahPelanggan:FC = () => {
     const {id} = useParams();

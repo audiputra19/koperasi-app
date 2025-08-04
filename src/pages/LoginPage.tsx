@@ -5,12 +5,12 @@ import { FaRegEye, FaRegEyeSlash, FaStore } from "react-icons/fa6";
 import { TbLockPassword } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/images/login-image.png";
+import Alert from "../components/Alert";
+import Loading from "../components/Loading";
+import { useAlert } from "../contexts/AlertContext";
 import { usePostLoginMutation } from "../services/apiAuth";
 import { useAppDispatch } from "../store";
 import { setToken } from "../store/authSlice";
-import Alert from "../components/Alert";
-import { useAlert } from "../contexts/AlertContext";
-import Loading from "../components/Loading";
 
 const LoginPage: FC = () => {
     const ref = useRef<HTMLInputElement>(null);

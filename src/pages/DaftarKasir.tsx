@@ -1,14 +1,13 @@
+import moment from 'moment';
 import type { FC, JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
-import { DataTable, type Column } from "../components/DataTable";
-import { getTitle } from "../constants/GetTitle";
-import { useNavigate } from "react-router-dom";
-import { useGetKasirQuery } from "../services/apiKasir";
-import moment from 'moment';
-import { TbEdit } from "react-icons/tb";
-import { FaRegTrashCan } from "react-icons/fa6";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { TbEdit } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import { DataTable, type Column } from "../components/DataTable";
 import Loading from "../components/Loading";
+import { getTitle } from "../constants/GetTitle";
+import { useGetKasirQuery } from "../services/apiKasir";
 
 type Kasir = {
     noTransaksi: string;

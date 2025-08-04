@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { CalendarDays } from "lucide-react";
-import { type FC, useEffect } from "react";
+import { type FC } from "react";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 

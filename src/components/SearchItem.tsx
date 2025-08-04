@@ -1,10 +1,9 @@
-import { useEffect, useState, type FC } from "react";
-import { useSearchItemsQuery } from "../services/apiItems";
-import type { getItemResponse } from "../interfaces/items";
 import { LucideCirclePlus } from "lucide-react";
+import { useEffect, useState, type FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import { useAlert } from "../contexts/AlertContext";
+import type { GetKasirDetailResponse } from "../interfaces/kasir";
+import { useSearchItemsQuery } from "../services/apiItems";
 
 interface onSelectItemProps {
     onSelectItem: (barang: GetKasirDetailResponse) => void;

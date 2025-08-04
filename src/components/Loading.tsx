@@ -1,5 +1,4 @@
 
-import clsx from "clsx";
 import { LoaderCircle } from "lucide-react";
 import { type FC, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";

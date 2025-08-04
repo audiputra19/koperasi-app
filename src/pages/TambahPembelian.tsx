@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useEffect, useState, type FC, type JSX } from "react";
+import { FaSave } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
@@ -7,15 +8,12 @@ import DatePickerInput from "../components/DatePicker";
 import SearchItem from "../components/SearchItem";
 import SearchSupplier from "../components/SearchSupplier";
 import { useAlert } from "../contexts/AlertContext";
-import type { GetKasirDetailResponse } from "../interfaces/kasir";
+import type { GetPembelianDetailResponse } from "../interfaces/pembelian";
 import type { getSupplierResponse } from "../interfaces/supplier";
 import { usePostMeQuery } from "../services/apiAuth";
-import { useInputKasirMutation } from "../services/apiKasir";
+import { useInputPembelianMutation } from "../services/apiPembelian";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransactionPembelian, clearTransactionPembelian, deleteTransactionPembelian, updateTransactionPembelian } from "../store/pembelianSlice";
-import { useInputPembelianMutation } from "../services/apiPembelian";
-import { FaSave } from "react-icons/fa";
-import type { GetPembelianDetailResponse } from "../interfaces/pembelian";
 
 type Kasir = {
     kodeItem: string;

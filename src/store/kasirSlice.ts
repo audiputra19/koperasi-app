@@ -1,6 +1,4 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { LoginResponse } from "../interfaces/auth";
-import type { getItemResponse } from "../interfaces/items";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
 
 interface KasirState {

@@ -1,10 +1,9 @@
-import { useEffect, useState, type FC } from "react";
-import type { getSupplierResponse } from "../interfaces/supplier";
-import { useSearchSupplierQuery } from "../services/apiSupplier";
 import { LucideCircleX } from "lucide-react";
-import { useGetKasirQuery } from "../services/apiKasir";
+import { useEffect, useState, type FC } from "react";
 import { useParams } from "react-router-dom";
+import type { getSupplierResponse } from "../interfaces/supplier";
 import { useGetPembelianQuery } from "../services/apiPembelian";
+import { useSearchSupplierQuery } from "../services/apiSupplier";
 
 interface onSelectUserProps {
     onSelectUser: (user: getSupplierResponse) => void

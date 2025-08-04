@@ -1,14 +1,14 @@
 import clsx from "clsx";
 import { ArrowLeft, ChevronDown, ChevronRight, LogOut, Settings, User, X } from "lucide-react";
 import { useEffect, useState, type FC } from "react";
-import { FaBars, FaStore, FaXmark } from "react-icons/fa6";
+import { FaBars, FaStore } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Alert from "../components/Alert";
 import { getTitle } from "../constants/GetTitle";
 import { sidebarMenu } from "../constants/SidebarMenu";
+import { usePostMeQuery } from "../services/apiAuth";
 import { useAppDispatch } from "../store";
 import { clearToken } from "../store/authSlice";
-import { usePostMeQuery } from "../services/apiAuth";
-import Alert from "../components/Alert";
 import { clearTransaction } from "../store/kasirSlice";
 import { clearTransactionPembelian } from "../store/pembelianSlice";
 
@@ -19,7 +19,7 @@ const MainLayout: FC = () => {
     const [toggledMenus, setToggledMenus] = useState<Record<string, boolean>>({});
     const title = getTitle();
     const dispatch = useAppDispatch();
-    const {data, isLoading} = usePostMeQuery(undefined, {
+    const {data} = usePostMeQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
     const user = data?.user;

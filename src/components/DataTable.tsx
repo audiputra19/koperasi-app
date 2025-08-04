@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Search } from "lucide-react";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
