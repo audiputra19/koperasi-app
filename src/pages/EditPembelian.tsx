@@ -33,13 +33,13 @@ const EditPembelian:  FC = () => {
     const [listSupplier, setListSupplier] = useState<getSupplierResponse>();
     const dispatch = useAppDispatch();
     const [updatePembelian, {data: pembelian, error, isSuccess}] = useUpdatePembelianMutation();
-    const [getPembelianDetail, {data: listBarang, isLoading}] = useGetPembelianDetailMutation();
+    const [getPembelianDetail, {data: listBarang}] = useGetPembelianDetailMutation();
     const [deletePembelianDetail, 
             {data: delPembelianDetailData, 
             isSuccess: delPembelianDetailSuccess, 
             error: delPembelianDetailError}] = useDeletePembelianDetailMutation();
     const transaction = useAppSelector(state => state.pembelian.transaction);
-    const [metode, setMetode] = useState(0);
+    const [metode] = useState(0);
     const {data} = usePostMeQuery();
     const user = data?.user;
     const {showAlert} = useAlert();

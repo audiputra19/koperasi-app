@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 const Loading: FC = () => {
   const spinValue = useRef<number>(0);
   const location = useLocation();
-  const path = location.pathname;
 
   useEffect(() => {
     const spin = () => {

@@ -33,7 +33,7 @@ const TambahKasir:  FC = () => {
     const [listPelanggan, setListPelanggan] = useState<GetPelangganResponse>();
     const dispatch = useAppDispatch();
     const listBarang = useAppSelector(state => state.kasir.transaction);
-    const [inputKasir, {data: kasir, isLoading, error, isSuccess}] = useInputKasirMutation();
+    const [inputKasir, {data: kasir, error, isSuccess}] = useInputKasirMutation();
     const [metode, setMetode] = useState(0);
     const {data} = usePostMeQuery();
     const user = data?.user;

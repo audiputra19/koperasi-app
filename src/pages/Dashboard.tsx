@@ -45,9 +45,6 @@ const Dashboard: FC = () => {
     const {data: populerItem} = useGetPopulerItemQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
-    const {data: mostBuyer} = useGetMostBuyerQuery(undefined, {
-        refetchOnMountOrArgChange: true
-    });
 
     const dataRestock = limitItem?.map(item => ({
         nama: item.nama,

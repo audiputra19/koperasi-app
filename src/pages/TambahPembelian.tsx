@@ -32,8 +32,8 @@ const TambahPembelian:  FC = () => {
     const [listSupplier, setListSupplier] = useState<getSupplierResponse>();
     const dispatch = useAppDispatch();
     const listBarang = useAppSelector(state => state.pembelian.transaction);
-    const [inputPembelian, {data: pembelian, isLoading, error, isSuccess}] = useInputPembelianMutation();
-    const [metode, setMetode] = useState(0);
+    const [inputPembelian, {data: pembelian, error, isSuccess}] = useInputPembelianMutation();
+    const [metode] = useState(0);
     const {data} = usePostMeQuery();
     const user = data?.user;
     const {showAlert} = useAlert();

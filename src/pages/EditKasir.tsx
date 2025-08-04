@@ -33,7 +33,7 @@ const EditKasir:  FC = () => {
     const [listPelanggan, setListPelanggan] = useState<GetPelangganResponse>();
     const dispatch = useAppDispatch();
     const [updateKasir, {data: kasir, error, isSuccess}] = useUpdateKasirMutation();
-    const [getKasirDetail, {data: listBarang, isLoading}] = useGetKasirDetailMutation();
+    const [getKasirDetail, {data: listBarang}] = useGetKasirDetailMutation();
     const [deleteKasirDetail, 
         {data: delKasirDetailData, 
         isSuccess: delKasirDetailSuccess, 
