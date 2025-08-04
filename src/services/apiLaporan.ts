@@ -5,7 +5,8 @@ import type { getLaporanRequest, getLaporanResponse } from "../interfaces/lapora
 export const apiLaporan = createApi({
     reducerPath: "apiLaporan",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         getLaporan: build.mutation<getLaporanResponse[], getLaporanRequest>({

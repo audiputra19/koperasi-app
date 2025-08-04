@@ -4,7 +4,8 @@ import type { getSupplierResponse, InputSuppRequest, InputSuppResponse } from ".
 export const apiSupplier = createApi({
     reducerPath: "apiSupplier",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         inputSupplier: build.mutation<InputSuppResponse, InputSuppRequest>({

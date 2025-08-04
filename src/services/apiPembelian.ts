@@ -4,7 +4,8 @@ import type { DeletePembelianDetailRequest, DeletePembelianDetailResponse, Delet
 export const apiPembelian = createApi({
     reducerPath: "apiPembelian",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         inputPembelian: build.mutation<InputPembelianResponse, InputPembelianRequest>({

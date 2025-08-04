@@ -4,7 +4,8 @@ import type { GetPelangganResponse, InputPelangganRequest, InputPelangganRespons
 export const apiPelanggan = createApi({
     reducerPath: "apiPelanggan",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         getPelanggan: build.query<GetPelangganResponse[], void>({

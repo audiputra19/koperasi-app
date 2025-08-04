@@ -4,7 +4,8 @@ import type { PopulerRes, TableRes, TotalRes } from "../interfaces/dashboard";
 export const apiDashboard = createApi({
     reducerPath: "apiDashboard",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         getTotalAnggota: build.query<TotalRes, void>({

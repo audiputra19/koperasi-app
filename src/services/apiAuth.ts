@@ -3,7 +3,8 @@ import type { RootState } from "../store";
 import type { LoginRequest, LoginResponse, AuthState, MeState, MeResponse } from "../interfaces/auth";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:3001/auth",
+    baseUrl: "https://api-koperasi-psi.vercel.app/auth",
+    //baseUrl: "http://localhost:3001/auth"
     prepareHeaders: (headers, {getState}) => {
         const token = (getState() as RootState).auth.token;
         if(token) {

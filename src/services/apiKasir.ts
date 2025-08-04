@@ -4,7 +4,8 @@ import type { DeleteKasirDetailRequest, DeleteKasirDetailResponse, DeleteKasirRe
 export const apiKasir = createApi({
     reducerPath: "apiKasir",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         inputKasir: build.mutation<InputKasirResponse, InputKasirRequest>({

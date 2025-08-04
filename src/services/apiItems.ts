@@ -6,6 +6,7 @@ export const apiItems = createApi({
     reducerPath: "apiItems",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:3001"
+        //baseUrl: "http://localhost:3001"
     }),
     endpoints: build => ({
         getItems: build.query<getItemResponse[], void>({
