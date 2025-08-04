@@ -1,11 +1,9 @@
 
 import { LoaderCircle } from "lucide-react";
 import { type FC, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
 
 const Loading: FC = () => {
   const spinValue = useRef<number>(0);
-  const location = useLocation();
 
   useEffect(() => {
     const spin = () => {
