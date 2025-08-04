@@ -8,12 +8,12 @@ export interface getItemResponse {
     jenis: string;
     hargaBeli: number;
     hargaJual: number;
-    hpp: string;
     stokMinimal: number;
     status: number;
 }
 
 export interface inputItemRequest {
+    kdItem?: string;
     barcode: string;
     nama: string;
     stok: number;
@@ -22,7 +22,7 @@ export interface inputItemRequest {
     jenis: string;
     hargaBeli: number;
     hargaJual: number;
-    hpp: string;
+    persenJual?: number | undefined;
     stokMinimal: number;
     status: number;
 }

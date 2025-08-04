@@ -31,6 +31,8 @@ export const getTitle = () => {
             if(slug === 'edit-kasir') return setTitle('Edit Kasir');
             if(slug === 'tambah-pembelian') return setTitle('Tambah Pembelian');
             if(slug === 'edit-pembelian') return setTitle('Edit Pembelian');
+            if(slug === 'edit-supplier') return setTitle('Edit Supplier');
+            if(slug === 'edit-item') return setTitle('Edit Item');
         }
     }, [path]);
 

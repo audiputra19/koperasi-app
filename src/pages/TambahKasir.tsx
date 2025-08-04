@@ -84,7 +84,7 @@ const TambahKasir:  FC = () => {
                 </div>
             ),
             satuan: item.satuan,
-            harga: item.harga.toLocaleString("id-ID"),
+            harga: (item.harga ?? 0).toLocaleString("id-ID"),
             total: totalItem.toLocaleString("id-ID"),
             action: (
                 <button 

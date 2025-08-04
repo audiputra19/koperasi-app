@@ -19,7 +19,9 @@ const MainLayout: FC = () => {
     const [toggledMenus, setToggledMenus] = useState<Record<string, boolean>>({});
     const title = getTitle();
     const dispatch = useAppDispatch();
-    const {data, isLoading} = usePostMeQuery();
+    const {data, isLoading} = usePostMeQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
     const user = data?.user;
     const isKasirPage = path === "/tambah-kasir" || /^\/edit-kasir\/.+/.test(path);
     const isPembelianPage = path === "/tambah-pembelian" || /^\/edit-pembelian\/.+/.test(path);

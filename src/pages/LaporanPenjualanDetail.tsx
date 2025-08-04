@@ -158,7 +158,7 @@ const LaporanPenjualanDetail: FC = () => {
                                                                         <td className="text-center px-2 py-1 w-[50px]">{itemDetail.kodeItem}</td>
                                                                         <td className="text-left px-2 py-1 w-[100px]">{itemDetail.namaItem}</td>
                                                                         <td className="text-center px-2 py-1 w-[50px]">{itemDetail.jumlah.toLocaleString("id-ID")}</td>
-                                                                        <td className="text-center px-2 py-1 w-[50px]">{itemDetail.harga.toLocaleString("id-ID")}</td>
+                                                                        <td className="text-center px-2 py-1 w-[50px]">{(itemDetail.harga ?? 0).toLocaleString("id-ID")}</td>
                                                                         <td className="text-center px-2 py-1 w-[50px]">{total.toLocaleString("id-ID")}</td>
                                                                     </tr>
                                                                 );

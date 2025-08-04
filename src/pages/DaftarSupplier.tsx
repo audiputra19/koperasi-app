@@ -1,4 +1,4 @@
-import { useEffect, type FC } from "react";
+import { useEffect, type FC, type JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
@@ -6,11 +6,13 @@ import { getTitle } from "../constants/GetTitle";
 import { useGetSupplierQuery } from "../services/apiSupplier";
 import Loading from "../components/Loading";
 import type { getSupplierResponse } from "../interfaces/supplier";
+import { TbEdit } from "react-icons/tb";
 
 type Supplier = {
     kode: string;
     nama: string;
     alamat: string;
+    action: JSX.Element;
 }
 
 const DaftarSupplier: FC = () => {
@@ -21,13 +23,24 @@ const DaftarSupplier: FC = () => {
     });
 
     const dataSupplier = data?.map(item => ({ 
-        kode: item.kode, nama: item.nama, alamat: item.alamat 
+        kode: item.kode, 
+        nama: item.nama, 
+        alamat: item.alamat ,
+        action: (
+            <button 
+                className="cursor-pointer"
+                onClick={() => navigate(`/edit-supplier/${item.kode}`)}
+            >
+                <TbEdit size={20}/>
+            </button>
+        )
     }));
 
     const columns: Column<Supplier>[] = [
-        { key: "kode", label: "Kode", align: "center", sortable: true },
-        { key: "nama", label: "Nama", align: "left", sortable: true },
+        { key: "kode", label: "Kode", align: "center", width: 100, sortable: true },
+        { key: "nama", label: "Nama", align: "left", width: 200, sortable: true },
         { key: "alamat", label: "Alamat", align: "left", sortable: true },
+        { key: "action", label: "Action", align: "center", sortable: true },
     ];
 
     return (

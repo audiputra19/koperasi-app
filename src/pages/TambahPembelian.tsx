@@ -90,7 +90,7 @@ const TambahPembelian:  FC = () => {
                         onDateChange={(date) => {
                             dispatch(updateTransactionPembelian({
                                 barcode: item.barcode,
-                                expiredDate: date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : ""
+                                expiredDate: date ? moment(date).format("YYYY-MM-DD") : ""
                             }));
                         }}
                         insideTable

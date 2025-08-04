@@ -30,6 +30,7 @@ type Props<T extends Record<string, any>> = {
   exportToExcelBtn?: boolean;
   exportToPdfBtn?: boolean;
   searchFilter?: boolean;
+  scrollOnly?: boolean;
 };
 
 export function DataTable<T extends Record<string, any>>({
@@ -41,7 +42,8 @@ export function DataTable<T extends Record<string, any>>({
   footerSummary,
   exportToExcelBtn,
   exportToPdfBtn,
-  searchFilter
+  searchFilter,
+  scrollOnly = false,
 }: Props<T>) {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -76,10 +78,13 @@ export function DataTable<T extends Record<string, any>>({
         });
     }, [filteredData, sortBy, sortAsc]);
 
-    const paginatedData = sortedData.slice((page - 1) * pageSize, page * pageSize);
-    const totalPages = Math.ceil(sortedData.length / pageSize);
-    const start = (page - 1) * pageSize + 1;
-    const end = Math.min(start + pageSize - 1, sortedData.length);
+    const paginatedData = useMemo(() => {
+        return scrollOnly ? sortedData : sortedData.slice((page - 1) * pageSize, page * pageSize);
+    }, [sortedData, scrollOnly, page, pageSize]);
+
+    const totalPages = scrollOnly ? 1 : Math.ceil(sortedData.length / pageSize);
+    const start = scrollOnly ? 1 : (page - 1) * pageSize + 1;
+    const end = scrollOnly ? sortedData.length : Math.min(start + pageSize - 1, sortedData.length);
     
     const handleSort = (key: keyof T) => {
         if (sortBy === key) {
@@ -230,11 +235,12 @@ export function DataTable<T extends Record<string, any>>({
                 </table>
             </div>
 
-            <div className="flex justify-between items-center mt-4">
-                <div>
+            {!scrollOnly && (
+                <div className="flex justify-between items-center mt-4">
+                    <div>
                     <p className="text-sm">Showing {start} to {end} of {sortedData.length} entries</p>
-                </div>
-                <div className="flex items-center gap-5">
+                    </div>
+                    <div className="flex items-center gap-5">
                     <button
                         className="btn btn-sm"
                         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -252,8 +258,9 @@ export function DataTable<T extends Record<string, any>>({
                     >
                         Next
                     </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }

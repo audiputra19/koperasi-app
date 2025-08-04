@@ -138,7 +138,7 @@ const EditPembelian:  FC = () => {
                     <DatePickerInput
                         selectedDate={expiredFinal ? new Date(expiredFinal) : null}
                         onDateChange={(date) => {
-                            const newDate = date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : "";
+                            const newDate = date ? moment(date).format("YYYY-MM-DD") : "";
                             setExpiredPerItem(prev => ({
                                 ...prev,
                                 [item.kodeItem]: newDate

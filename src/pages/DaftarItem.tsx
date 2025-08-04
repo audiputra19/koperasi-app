@@ -1,10 +1,11 @@
-import type { FC } from "react";
+import type { FC, JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
 import { DataTable, type Column } from "../components/DataTable";
 import { getTitle } from "../constants/GetTitle";
 import { useNavigate } from "react-router-dom";
 import { useGetItemsQuery } from "../services/apiItems";
 import Loading from "../components/Loading";
+import { TbEdit } from "react-icons/tb";
 
 type Items = {
     kode: string;
@@ -16,9 +17,9 @@ type Items = {
     jenis: string;
     jual: number;
     beli: number;
-    hpp: string;
     minStok: number;
     status: string;
+    action: JSX.Element;
 };
 const DaftarItem: FC = () => {
     const title = getTitle();
@@ -44,10 +45,17 @@ const DaftarItem: FC = () => {
             rak: item.rak, 
             jenis: item.jenis,  
             beli: item.hargaBeli, 
-            jual: item.hargaJual,  
-            hpp: item.hpp, 
+            jual: item.hargaJual, 
             minStok: item.stokMinimal, 
-            status: status, 
+            status: status,
+            action: (
+                <button 
+                    className="cursor-pointer"
+                    onClick={() => navigate(`/edit-item/${item.kode}`)}
+                >
+                    <TbEdit size={20}/>
+                </button>
+            ) 
         }
     });
 
@@ -61,9 +69,9 @@ const DaftarItem: FC = () => {
         { key: "jenis", label: "Jenis", align: "center", sortable: false },
         { key: "beli", label: "Harga Beli", align: "right", sortable: true },
         { key: "jual", label: "Harga Jual", align: "right", sortable: true },
-        { key: "hpp", label: "System HPP", align: "right", sortable: false },
         { key: "minStok", label: "Stok Min.", align: "center", sortable: true },
         { key: "status", label: "Status Jual", align: "center", width: 100, sortable: false },
+        { key: "action", label: "Action", align: "center", sortable: false },
     ];
 
     return (

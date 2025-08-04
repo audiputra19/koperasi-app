@@ -16,7 +16,6 @@ const TambahItem:FC = () => {
         hargaBeli: 0,
         hargaJual: 0,
         persenJual: 0,
-        hpp: "",
         stokMinimal: 0,
         status: 0,
     });
@@ -210,24 +209,6 @@ const TambahItem:FC = () => {
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label htmlFor="hpp-system" className="block text-sm font-medium text-gray-500">
-                            HPP System
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <select 
-                            name="hpp-system" 
-                            id="hpp-system" 
-                            className="select w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
-                            onChange={(e) => setFrom(prev => ({
-                                ...prev,
-                                hpp: e.target.value
-                            }))} 
-                        >
-                            <option value="">- Pilih Data -</option>
-                            <option value="fifo">FIFO</option>
-                        </select>
                     </div>
                     <div className="flex flex-col gap-1">
                         <label htmlFor="stok-minimum" className="block text-sm font-medium text-gray-500">

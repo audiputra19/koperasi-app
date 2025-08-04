@@ -69,7 +69,7 @@ const LoginPage: FC = () => {
                     </p>
                     <div className="mt-8">
                         <label htmlFor="idAdmin" className="block text-sm font-medium text-gray-400">
-                            ID Admin
+                            ID User
                         </label>
                         <div className="relative">
                             <div className="absolute top-[20px] left-3">

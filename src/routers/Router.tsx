@@ -21,6 +21,8 @@ import EditPembelian from "../pages/EditPembelian";
 import Laporan from "../pages/Laporan";
 import LaporanPenjualanRekap from "../pages/LaporanPenjualanRekap";
 import LaporanPenjualanDetail from "../pages/LaporanPenjualanDetail";
+import EditSupplier from "../pages/EditSupplier";
+import EditItem from "../pages/EditItem";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => (
     <motion.div
@@ -96,6 +98,14 @@ const Router: FC = () => {
                 {
                     path: 'laporan',
                     element: <PageTransition><Laporan /></PageTransition>
+                },
+                {
+                    path: 'edit-supplier/:id',
+                    element: <PageTransition><EditSupplier /></PageTransition>
+                },
+                {
+                    path: 'edit-item/:id',
+                    element: <PageTransition><EditItem /></PageTransition>
                 }
             ]
         },
