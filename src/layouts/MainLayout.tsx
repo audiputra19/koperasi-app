@@ -213,7 +213,11 @@ const MainLayout: FC = () => {
                                         <a><User size={20}/>Profile</a>
                                     </li>
                                     <li>
-                                        <a><Settings size={20}/>Settings</a>
+                                        <a
+                                            onClick={() => navigate('/settings')}
+                                        >
+                                            <Settings size={20}/>Settings
+                                        </a>
                                     </li>
                                     <li 
                                         className="border-t border-gray-200 pt-2"

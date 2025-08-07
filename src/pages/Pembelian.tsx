@@ -1,5 +1,5 @@
 import moment from 'moment';
-import type { FC, JSX } from "react";
+import { useEffect, type FC, type JSX } from "react";
 import { FiPlusCircle } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../components/DataTable";
 import Loading from "../components/Loading";
 import { getTitle } from "../constants/GetTitle";
-import { useGetPembelianQuery } from "../services/apiPembelian";
+import { useDeletePembelianMutation, useGetPembelianQuery } from "../services/apiPembelian";
+import { useAlert } from '../contexts/AlertContext';
+import { usePostMeQuery } from '../services/apiAuth';
+import { useGetAksesQuery } from '../services/apiHakAkses';
 
 type Pembelian = {
     noTransaksi: string;
@@ -23,9 +26,26 @@ type Pembelian = {
 const Pembelian: FC = () => {
     const title = getTitle();
     const navigate = useNavigate();
-    const {data, isLoading} = useGetPembelianQuery(undefined, {
+    const {data, isLoading, refetch} = useGetPembelianQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
+    const [delKasir, {data: dataDel, isSuccess: isSuccessDel, error: errorDel}] = useDeletePembelianMutation();
+    const {showAlert} = useAlert();
+    const {data: userData} = usePostMeQuery();
+    const user = userData?.user;
+    const {data: dataAkses} = useGetAksesQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+    const userAkses = dataAkses?.find(u => u.id === user?.id);
+
+    useEffect(() => {
+        if(dataDel && isSuccessDel){
+            refetch();
+        } else if(errorDel){
+            const message = (errorDel as { data?: { message?: string } }).data?.message   
+            showAlert(message ?? 'Terjadi kesalahan');
+        }
+    })
         
     const dataPembelian = data?.map(item => {
         const date = moment(item.tanggal).format("YYYY-MM-DD HH:mm:ss");
@@ -40,19 +60,26 @@ const Pembelian: FC = () => {
             userBuat: item.userBuat,
             userUbah: userUbah,
             action: (
-                <div className="flex gap-3">
+                <div className="flex justify-center gap-3">
                     <button 
                         className="cursor-pointer"
                         onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
                     >
                         <TbEdit size={20} />
                     </button>
-                    <button 
-                        className="cursor-pointer"
-                        onClick={() => navigate(`/edit-pembelian/${encodeURIComponent(item.idTransaksi)}`)}
-                    >
-                        <RiDeleteBin5Line size={20} />
-                    </button>
+                    {(!userAkses || userAkses?.delete !== 1) && ( // Just admin has access
+                        <button 
+                            className="cursor-pointer"
+                            onClick={() => {
+                                const confirmed = window.confirm("Yakin ingin menghapus data ini?");
+                                if (confirmed) {
+                                    delKasir({ idTransaksi: item.idTransaksi });
+                                }
+                            }} 
+                        >
+                            <RiDeleteBin5Line size={20} />
+                        </button>
+                    )}
                 </div>
             )
         }

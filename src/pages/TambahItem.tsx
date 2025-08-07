@@ -25,7 +25,7 @@ const TambahItem:FC = () => {
     const location = useLocation();
     const fromPage = location.state?.from ?? 'daftar-item';
     const [manualHargaJual, setManualHargaJual] = useState(false);
-    console.log(form)
+    //console.log(form)
 
     useEffect(() => {
         if (!manualHargaJual) {

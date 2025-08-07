@@ -14,6 +14,7 @@ import { apiKasir } from "../services/apiKasir";
 import { apiPembelian } from "../services/apiPembelian";
 import { apiLaporan } from "../services/apiLaporan";
 import { apiDashboard } from "../services/apiDashboard";
+import { apiAkses } from "../services/apiHakAkses";
 
 const persistConfig = {
     key: 'root',
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
     [apiKasir.reducerPath]: apiKasir.reducer,
     [apiPembelian.reducerPath]: apiPembelian.reducer,
     [apiLaporan.reducerPath]: apiLaporan.reducer,
-    [apiDashboard.reducerPath]: apiDashboard.reducer
+    [apiDashboard.reducerPath]: apiDashboard.reducer,
+    [apiAkses.reducerPath]: apiAkses.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -50,7 +52,8 @@ export const store = configureStore({
             apiKasir.middleware,
             apiPembelian.middleware,
             apiLaporan.middleware,
-            apiDashboard.middleware
+            apiDashboard.middleware,
+            apiAkses.middleware,
         )
 });
 

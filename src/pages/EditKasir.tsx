@@ -15,6 +15,7 @@ import { usePostMeQuery } from "../services/apiAuth";
 import { useDeleteKasirDetailMutation, useGetKasirDetailMutation, useGetKasirQuery, useUpdateKasirMutation } from "../services/apiKasir";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransaction, clearTransaction, deleteTransaction, updateTransaction } from "../store/kasirSlice";
+import { useGetAksesQuery } from "../services/apiHakAkses";
 
 type Kasir = {
     kodeItem: string;
@@ -51,6 +52,10 @@ const EditKasir:  FC = () => {
     });
     const takeKasir = kasirData.find(k => k.idTransaksi === idTransaksi);
     const [jumlahPerItem, setJumlahPerItem] = useState<Record<string, number>>({});
+    const {data: dataAkses} = useGetAksesQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+    const userAkses = dataAkses?.find(u => u.id === user?.id);
 
     useEffect(() => {
         if(delKasirDetailData && delKasirDetailSuccess){
@@ -241,12 +246,14 @@ const EditKasir:  FC = () => {
                 <div className="flex gap-5 mt-5">
                     <div className="flex-1 bg-white p-5 rounded-lg shadow-sm">
                         <div className="flex gap-5">
-                            <div className="flex flex-col gap-1">
-                                <label htmlFor="tanggal" className="block text-sm font-medium text-gray-500">
-                                    Tanggal
-                                </label>
-                                <DatePickerInput selectedDate={startDate} onDateChange={setStartDate} />
-                            </div>
+                            {(!userAkses || userAkses?.dateCashier !== 1) && ( // Just admin has access
+                                <div className="flex flex-col gap-1">
+                                    <label htmlFor="tanggal" className="block text-sm font-medium text-gray-500">
+                                        Tanggal
+                                    </label>
+                                    <DatePickerInput selectedDate={startDate} onDateChange={setStartDate} />
+                                </div>
+                            )}
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="pelanggan" className="block text-sm font-medium text-gray-500">
                                     Pelanggan

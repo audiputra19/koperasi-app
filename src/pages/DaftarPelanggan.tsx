@@ -12,7 +12,7 @@ type Pelanggan = {
     groupPel: string;
     limitBelanja: number;
     kredit: string;
-    action: JSX.Element;
+    action: JSX.Element | string;
 };
 const DaftarPelanggan: FC = () => {
     const title = getTitle();
@@ -46,7 +46,8 @@ const DaftarPelanggan: FC = () => {
             groupPel: group, 
             limitBelanja: limitBelanja,
             kredit: kredit,
-            action: (
+            action: `${item.kode}` !== '00000'
+            ? (
                 <button 
                     className="cursor-pointer"
                     onClick={() => navigate(`/edit-pelanggan/${item.kode}`)}
@@ -54,6 +55,7 @@ const DaftarPelanggan: FC = () => {
                     <TbEdit size={20}/>
                 </button>
             )
+            : ''
         }
     });
 

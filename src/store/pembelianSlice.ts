@@ -21,7 +21,7 @@ const pembelianSlice = createSlice({
                 state.transaction.push({ ...action.payload, jumlah: Number(1) });
             }
         },
-        updateTransactionPembelian: (state, action: PayloadAction<{ barcode: string, stok?: number, expiredDate?: string }>) => {
+        updateTransactionPembelian: (state, action: PayloadAction<{ barcode: string, stok?: number, expiredDate?: string, harga?: number }>) => {
             const item = state.transaction.find(item => item.barcode === action.payload.barcode);
             if (item) {
                 if (typeof action.payload.stok !== "undefined") {
@@ -29,6 +29,9 @@ const pembelianSlice = createSlice({
                 }
                 if (typeof action.payload.expiredDate !== "undefined") {
                     item.expiredDate = action.payload.expiredDate;
+                }
+                if (typeof action.payload.harga !== "undefined") {
+                    item.harga = action.payload.harga;
                 }
             }
         },

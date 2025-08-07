@@ -8,6 +8,8 @@ import { useAlert } from "../contexts/AlertContext";
 import type { inputItemRequest } from "../interfaces/items";
 import { useGetItemsQuery, useInputItemsMutation } from "../services/apiItems";
 import { HargaItem } from "../subPages/HargaItem";
+import { useAppDispatch } from "../store";
+import { updateTransactionPembelian } from "../store/pembelianSlice";
 
 const EditItem:FC = () => {
     const {id} = useParams();
@@ -45,6 +47,7 @@ const EditItem:FC = () => {
         }
     ];
     const [menuSelected, setMenuSelected] = useState(1);
+    const dispatch = useAppDispatch();
 
     const labelMenuEditItem = dataMenuItem.map(item => {
         return (
@@ -63,7 +66,15 @@ const EditItem:FC = () => {
                 </span>
             </div>
         )
-    })
+    });
+
+    //console.log(fromPage);
+
+    useEffect(() => {
+        if(fromPage === 'pembelian') {
+            setMenuSelected(2);
+        }
+    }, [setMenuSelected, fromPage]);
 
     useEffect(() => {
         if (item) {
@@ -88,7 +99,7 @@ const EditItem:FC = () => {
         if(isSuccess && data) {
             const message = data.message;
             showAlert(message);
-            if(fromPage === 'kasir') {
+            if(fromPage === 'pembelian') {
                 navigate(-1);
             } else {
                 navigate('/daftar-item');
@@ -101,6 +112,12 @@ const EditItem:FC = () => {
 
     const handleSave = () => {
         inputItems(form)
+        if(fromPage === 'pembelian') {
+            dispatch(updateTransactionPembelian({
+                barcode: form.barcode,
+                harga: form.hargaJual
+            }));
+        }
     }
 
     return (

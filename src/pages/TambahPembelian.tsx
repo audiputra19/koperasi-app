@@ -14,6 +14,7 @@ import { usePostMeQuery } from "../services/apiAuth";
 import { useInputPembelianMutation } from "../services/apiPembelian";
 import { useAppDispatch, useAppSelector } from "../store";
 import { addTransactionPembelian, clearTransactionPembelian, deleteTransactionPembelian, updateTransactionPembelian } from "../store/pembelianSlice";
+import { useGetAksesQuery } from "../services/apiHakAkses";
 
 type Kasir = {
     kodeItem: string;
@@ -22,7 +23,7 @@ type Kasir = {
     jumlah: JSX.Element;
     expired: JSX.Element;
     satuan: string;
-    harga: string;
+    harga: JSX.Element;
     total: string;
     action: JSX.Element;
 };
@@ -38,6 +39,10 @@ const TambahPembelian:  FC = () => {
     const user = data?.user;
     const {showAlert} = useAlert();
     const navigate = useNavigate();
+    const {data: dataAkses} = useGetAksesQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+    const userAkses = dataAkses?.find(u => u.id === user?.id);
 
     useEffect(() => {
         if(pembelian && isSuccess) {
@@ -96,7 +101,14 @@ const TambahPembelian:  FC = () => {
                 </div>
             ),
             satuan: item.satuan,
-            harga: item.harga.toLocaleString("id-ID"),
+            harga: (
+                <span
+                    onClick={() => navigate(`/edit-item/${item.kodeItem}`, {state: {from: 'pembelian'}})}
+                    className="text-blue-500 cursor-pointer hover:text-blue-700"
+                >
+                    {item.harga.toLocaleString("id-ID")}
+                </span>
+            ),
             total: totalItem.toLocaleString("id-ID"),
             action: (
                 <button 
@@ -162,12 +174,14 @@ const TambahPembelian:  FC = () => {
                 <div className="flex-1 bg-white p-5 rounded-lg shadow-sm">
                     <div className="flex justify-between items-center">
                         <div className="flex gap-5">
-                            <div className="flex flex-col gap-1">
-                                <label htmlFor="tanggal" className="block text-sm font-medium text-gray-500">
-                                    Tanggal
-                                </label>
-                                <DatePickerInput selectedDate={startDate} onDateChange={setStartDate} />
-                            </div>
+                            {(!userAkses || userAkses?.dateCashier !== 1) && ( // Just admin has access
+                                <div className="flex flex-col gap-1">
+                                    <label htmlFor="tanggal" className="block text-sm font-medium text-gray-500">
+                                        Tanggal
+                                    </label>
+                                    <DatePickerInput selectedDate={startDate} onDateChange={setStartDate} />
+                                </div>
+                            )}
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="pelanggan" className="block text-sm font-medium text-gray-500">
                                     Supplier

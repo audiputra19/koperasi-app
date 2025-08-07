@@ -23,6 +23,7 @@ import LaporanPenjualanRekap from "../pages/LaporanPenjualanRekap";
 import LaporanPenjualanDetail from "../pages/LaporanPenjualanDetail";
 import EditSupplier from "../pages/EditSupplier";
 import EditItem from "../pages/EditItem";
+import Settings from "../pages/Settings";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => (
     <motion.div
@@ -106,6 +107,10 @@ const Router: FC = () => {
                 {
                     path: 'edit-item/:id',
                     element: <PageTransition><EditItem /></PageTransition>
+                },
+                {
+                    path: 'settings',
+                    element: <PageTransition><Settings /></PageTransition>
                 }
             ]
         },
