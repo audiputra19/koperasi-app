@@ -4,7 +4,8 @@ import type { GetAksesRes } from "../interfaces/hakAkses";
 export const apiAkses = createApi({
     reducerPath: 'apiAkses',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3001'
+        baseUrl: "https://api-koperasi-psi.vercel.app"
+        // baseUrl: 'http://localhost:3001'
     }),
     endpoints: build => ({
         getAkses: build.query<GetAksesRes[], void>({
