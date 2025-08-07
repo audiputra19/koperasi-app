@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { PopulerRes, TableRes, TotalRes } from "../interfaces/dashboard";
+import { baseQuery } from "./baseQuery";
 
 export const apiDashboard = createApi({
     reducerPath: "apiDashboard",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        //baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         getTotalAnggota: build.query<TotalRes, void>({
             query: () => ({

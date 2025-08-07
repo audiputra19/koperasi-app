@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { getSupplierResponse, InputSuppRequest, InputSuppResponse } from "../interfaces/supplier";
+import { baseQuery } from "./baseQuery";
 
 export const apiSupplier = createApi({
     reducerPath: "apiSupplier",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        //baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         inputSupplier: build.mutation<InputSuppResponse, InputSuppRequest>({
             query: body => ({

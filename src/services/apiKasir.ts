@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { DeleteKasirDetailRequest, DeleteKasirDetailResponse, DeleteKasirRequest, DeleteKasirResponse, GetKasirDetailRequest, GetKasirDetailResponse, GetKasirResponse, InputKasirRequest, InputKasirResponse, UpdateKasirRequest, UpdateKasirResponse } from "../interfaces/kasir";
+import { baseQuery } from "./baseQuery";
 
 export const apiKasir = createApi({
     reducerPath: "apiKasir",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        //baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         inputKasir: build.mutation<InputKasirResponse, InputKasirRequest>({
             query: body => ({

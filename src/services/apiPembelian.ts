@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { DeletePembelianDetailRequest, DeletePembelianDetailResponse, DeletePembelianRequest, DeletePembelianResponse, GetPembelianDetailRequest, GetPembelianDetailResponse, GetPembelianResponse, InputPembelianRequest, InputPembelianResponse, UpdatePembelianRequest, UpdatePembelianResponse } from "../interfaces/pembelian";
+import { baseQuery } from "./baseQuery";
 
 export const apiPembelian = createApi({
     reducerPath: "apiPembelian",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        //baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         inputPembelian: build.mutation<InputPembelianResponse, InputPembelianRequest>({
             query: body => ({

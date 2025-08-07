@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { GetAksesRes } from "../interfaces/hakAkses";
+import { baseQuery } from "./baseQuery";
 
 export const apiAkses = createApi({
     reducerPath: 'apiAkses',
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        // baseUrl: 'http://localhost:3001'
-    }),
+    baseQuery,
     endpoints: build => ({
         getAkses: build.query<GetAksesRes[], void>({
             query: () => ({

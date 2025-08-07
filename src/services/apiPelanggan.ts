@@ -1,12 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { GetPelangganResponse, InputPelangganRequest, InputPelangganResponse } from "../interfaces/pelanggan";
+import { baseQuery } from "./baseQuery";
 
 export const apiPelanggan = createApi({
     reducerPath: "apiPelanggan",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        //baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         getPelanggan: build.query<GetPelangganResponse[], void>({
             query: () => ({

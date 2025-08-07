@@ -1,13 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { getItemResponse, inputItemRequest, inputItemResponse } from "../interfaces/items";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
+import { baseQuery } from "./baseQuery";
 
 export const apiItems = createApi({
     reducerPath: "apiItems",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "https://api-koperasi-psi.vercel.app"
-        // baseUrl: "http://localhost:3001"
-    }),
+    baseQuery,
     endpoints: build => ({
         getItems: build.query<getItemResponse[], void>({
             query: () => ({
