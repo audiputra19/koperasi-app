@@ -1,12 +1,10 @@
 type AccessSwitchProps = {
-  userId: number;
   feature: 'delete' | 'date_cashier';
   currentValue: boolean;
   onChange: (newValue: boolean) => void;
 };
 
 const AccessSwitch: React.FC<AccessSwitchProps> = ({
-  userId,
   feature,
   currentValue,
   onChange,

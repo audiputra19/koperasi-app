@@ -27,13 +27,11 @@ const Settings: FC = () => {
                 <div key={user.id} className="border p-4 rounded">
                 <div>User ID: {user.id}</div>
                 <AccessSwitch
-                    userId={user.id}
                     feature="delete"
                     currentValue={!!user.delete}
                     onChange={(newVal) => handleToggle(user.id, 'delete', newVal)}
                 />
                 <AccessSwitch
-                    userId={user.id}
                     feature="date_cashier"
                     currentValue={!!user.dateCashier}
                     onChange={(newVal) => handleToggle(user.id, 'date_cashier', newVal)}
