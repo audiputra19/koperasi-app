@@ -27,14 +27,14 @@ const Laporan: FC = () => {
     return (
         <div>
             <div className="bg-white p-4 rounded-lg shadow-sm">
-                <div className="flex gap-5 items-center">
+                <div className="flex items-center">
                     <div className="flex flex-col gap-1">
                         <label htmlFor="tanggal" className="block text-sm font-medium text-gray-500">
                             Periode
                         </label>
                         <DatePickerInput selectedDate={startDate} onDateChange={setStartDate} />
                     </div>
-                    <p className="mt-5">-</p>
+                    <p className="mt-5 mr-5">-</p>
                     <div className="flex flex-col gap-1">
                         <label htmlFor="tanggal" className="block text-sm font-medium text-white">
                             Tanggal 2
