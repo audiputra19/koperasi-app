@@ -22,22 +22,26 @@ const Settings: FC = () => {
     };
 
     return (
-        <div>
-            {dataAkses?.map((user) => (
-                <div key={user.id} className="border p-4 rounded">
-                <div>User ID: {user.id}</div>
-                <AccessSwitch
-                    feature="delete"
-                    currentValue={!!user.delete}
-                    onChange={(newVal) => handleToggle(user.id, 'delete', newVal)}
-                />
-                <AccessSwitch
-                    feature="date_cashier"
-                    currentValue={!!user.dateCashier}
-                    onChange={(newVal) => handleToggle(user.id, 'date_cashier', newVal)}
-                />
-                </div>
-            ))}
+        <div className="flex justify-center">
+            <div className="flex gap-5 bg-white rounded-lg shadow-sm p-5">
+                {dataAkses?.map((user) => (
+                        <div key={user.id} className="border border-gray-300 rounded-md p-4 rounded w-[300px]">
+                            <div className="font-bold">{user.nama}</div>
+                            <div className="flex flex-col gap-2 mt-5">
+                                <AccessSwitch
+                                    feature="Tombol Delete"
+                                    currentValue={!!user.delete}
+                                    onChange={(newVal) => handleToggle(user.id, 'delete', newVal)}
+                                />
+                                <AccessSwitch
+                                    feature="Tanggal Input"
+                                    currentValue={!!user.dateCashier}
+                                    onChange={(newVal) => handleToggle(user.id, 'date_cashier', newVal)}
+                                />
+                            </div>
+                        </div>
+                ))}
+            </div>
         </div>
     )
 }

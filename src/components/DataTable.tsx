@@ -227,7 +227,7 @@ export function DataTable<T extends Record<string, any>>({
                         )}
                     </tbody>
                     {paginatedData.length > 0 && footerSummary && (
-                        <tfoot className="font-bold text-gray-400 sticky bottom-0 bg-white">
+                        <tfoot className="font-bold text-gray-500 sticky bottom-0 bg-white">
                         {footerSummary(sortedData)}
                         </tfoot>
                     )}

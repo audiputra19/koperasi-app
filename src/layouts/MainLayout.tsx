@@ -11,6 +11,7 @@ import { useAppDispatch } from "../store";
 import { clearToken } from "../store/authSlice";
 import { clearTransaction } from "../store/kasirSlice";
 import { clearTransactionPembelian } from "../store/pembelianSlice";
+import { useGetAksesQuery } from "../services/apiHakAkses";
 
 const MainLayout: FC = () => {
     const location = useLocation();
@@ -29,6 +30,10 @@ const MainLayout: FC = () => {
         const saved = localStorage.getItem("sidebarCollapsed");
         return saved === "true"; // true kalau string 'true'
     });
+    const {data: dataAkses} = useGetAksesQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+    const userAkses = dataAkses?.find(u => u.id === user?.id);
 
     useEffect(() => {
         localStorage.setItem("sidebarCollapsed", String(collapsed));
@@ -212,13 +217,15 @@ const MainLayout: FC = () => {
                                     <li>
                                         <a><User size={20}/>Profile</a>
                                     </li>
-                                    <li>
-                                        <a
-                                            onClick={() => navigate('/settings')}
-                                        >
-                                            <Settings size={20}/>Settings
-                                        </a>
-                                    </li>
+                                    {(!userAkses || userAkses?.dateCashier !== 1) && ( // Just admin has access
+                                        <li>
+                                            <a
+                                                onClick={() => navigate('/settings')}
+                                            >
+                                                <Settings size={20}/>Settings
+                                            </a>
+                                        </li>
+                                    )}
                                     <li 
                                         className="border-t border-gray-200 pt-2"
                                         onClick={() => dispatch(clearToken())}

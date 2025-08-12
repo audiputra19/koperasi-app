@@ -1,5 +1,5 @@
 type AccessSwitchProps = {
-  feature: 'delete' | 'date_cashier';
+  feature: string;
   currentValue: boolean;
   onChange: (newValue: boolean) => void;
 };
@@ -10,8 +10,8 @@ const AccessSwitch: React.FC<AccessSwitchProps> = ({
   onChange,
 }) => {
   return (
-    <label className="flex items-center gap-2 cursor-pointer">
-      <span className="capitalize">{feature}</span>
+    <label className="flex justify-between items-center cursor-pointer">
+      <span className="capitalize text-sm">{feature}</span>
       <input
         type="checkbox"
         checked={currentValue}
