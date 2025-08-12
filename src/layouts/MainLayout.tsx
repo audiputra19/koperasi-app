@@ -201,11 +201,11 @@ const MainLayout: FC = () => {
                             <p className="text-lg font-semibold text-slate-800">{title}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <img 
-                                src="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80" 
-                                alt="profile-picture" 
-                                className="w-8 h-8 object-cover rounded-full" 
-                            />
+                            <div
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-400 text-white font-bold"
+                                >
+                                {user?.nama?.charAt(0)?.toUpperCase()}
+                            </div>
                             <div>
                                 <p className="text-sm font-bold text-slate-800">{user?.nama}</p>
                             </div>
