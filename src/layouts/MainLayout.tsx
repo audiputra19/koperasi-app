@@ -12,6 +12,7 @@ import { clearToken } from "../store/authSlice";
 import { clearTransaction } from "../store/kasirSlice";
 import { clearTransactionPembelian } from "../store/pembelianSlice";
 import { useGetAksesQuery } from "../services/apiHakAkses";
+import koperasiLogo from '../assets/images/koperasi-logo.jpg'
 
 const MainLayout: FC = () => {
     const location = useLocation();
@@ -154,7 +155,11 @@ const MainLayout: FC = () => {
                     <div className="p-5">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center text-white gap-3">
-                                <FaStore size={30} className="text-slate-800"/>
+                                <img 
+                                    src={koperasiLogo}
+                                    alt="koperasi logo"
+                                    className="w-10 h-10"
+                                />
                                 <p className="font-bold text-xl text-slate-800">Kopsa</p>
                             </div>
                             {!collapsed && (
