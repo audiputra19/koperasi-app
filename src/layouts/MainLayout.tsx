@@ -1,18 +1,18 @@
 import clsx from "clsx";
 import { ArrowLeft, ChevronDown, ChevronRight, LogOut, Settings, User, X } from "lucide-react";
 import { useEffect, useState, type FC } from "react";
-import { FaBars, FaStore } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa6";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import koperasiLogo from '../assets/images/koperasi-logo.jpg';
 import Alert from "../components/Alert";
 import { getTitle } from "../constants/GetTitle";
 import { sidebarMenu } from "../constants/SidebarMenu";
 import { usePostMeQuery } from "../services/apiAuth";
+import { useGetAksesQuery } from "../services/apiHakAkses";
 import { useAppDispatch } from "../store";
 import { clearToken } from "../store/authSlice";
 import { clearTransaction } from "../store/kasirSlice";
 import { clearTransactionPembelian } from "../store/pembelianSlice";
-import { useGetAksesQuery } from "../services/apiHakAkses";
-import koperasiLogo from '../assets/images/koperasi-logo.jpg'
 
 const MainLayout: FC = () => {
     const location = useLocation();
