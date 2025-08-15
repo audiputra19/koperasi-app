@@ -13,7 +13,7 @@ const DatePickerInput: FC<DatePickerProps> = ({ selectedDate, onDateChange, insi
 
     return (
         <div>
-            <div className="flex items-center gap-2 relative w-[160px]">
+            <div className="flex items-center gap-2 relative">
                 <div className={clsx("absolute left-2 z-10 text-gray-500 top-[8px] dark:text-white")}>
                     <CalendarDays size={20}/>
                 </div>

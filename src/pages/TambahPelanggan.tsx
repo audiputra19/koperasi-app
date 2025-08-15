@@ -25,6 +25,17 @@ const TambahPelanggan:FC = () => {
         }
     }, [dataPelanggan, isSuccess, error]);
 
+    useEffect(() => {
+        if (pelanggan) {
+            setForm({
+                kode: id ?? "",
+                idKategori: pelanggan.idKategori ?? 0,
+                limitBelanja: pelanggan.limitBelanja ?? 0,
+                kredit: pelanggan.kredit ?? 0
+            });
+        }
+    }, [pelanggan, id]);
+
     return (
         <div className="flex justify-center">
             {isLoading && <Loading/>}
@@ -56,7 +67,7 @@ const TambahPelanggan:FC = () => {
                             name="group-pel" 
                             id="group-pel" 
                             className="select w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
-                            defaultValue={pelanggan?.idKategori}
+                            value={form?.idKategori}
                             onChange={(e) => 
                                 setForm(prev => ({
                                     ...prev,
@@ -78,7 +89,7 @@ const TambahPelanggan:FC = () => {
                             name="limit-belanja" 
                             id="limit-belanja"
                             className="w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none" 
-                            defaultValue={pelanggan?.limitBelanja}
+                            value={form?.limitBelanja}
                             onChange={(e) => 
                                 setForm(prev => ({
                                     ...prev,
@@ -95,7 +106,7 @@ const TambahPelanggan:FC = () => {
                             name="group-pel" 
                             id="group-pel" 
                             className="select w-full border px-3 py-2 border-gray-300 rounded-lg text-sm focus:outline-none"
-                            value={pelanggan?.idKategori}
+                            value={form?.kredit}
                             onChange={(e) => 
                                 setForm(prev => ({
                                     ...prev,

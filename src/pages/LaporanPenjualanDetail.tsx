@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Fragment, useEffect, useState, type FC } from "react";
-import { FaStore } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import koperasiLogo from '../assets/images/koperasi-logo.jpg';
 import Loading from "../components/Loading";
 import type { GetKasirDetailResponse } from "../interfaces/kasir";
 import { useGetKasirDetailMutation } from "../services/apiKasir";
@@ -82,7 +82,11 @@ const LaporanPenjualanDetail: FC = () => {
             <div className="border border-dashed border-gray-800 bg-white text-black">
                 <div className="flex justify-between p-5">
                     <div className="flex gap-3">
-                        <FaStore size={56} className="text-black" />
+                        <img 
+                            src={koperasiLogo}
+                            alt="koperasi logo"
+                            className="w-25 h-25"
+                        />
                         <div className="w-[250px]">
                         <p className="font-bold">LAPORAN PENJUALAN Detail</p>
                         <p className="text-sm font-semibold">KOPERASI KONSUMEN KARYAWAN SARANDI KARYA NUGRAHA</p>

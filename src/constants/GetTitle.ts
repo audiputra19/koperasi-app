@@ -33,6 +33,7 @@ export const getTitle = () => {
             if(slug === 'edit-pembelian') return setTitle('Edit Pembelian');
             if(slug === 'edit-supplier') return setTitle('Edit Supplier');
             if(slug === 'edit-item') return setTitle('Edit Item');
+            if(slug === 'settings') return setTitle('Settings');
         }
     }, [path]);
 
